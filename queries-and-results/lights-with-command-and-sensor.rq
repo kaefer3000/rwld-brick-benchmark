@@ -1,0 +1,8 @@
+SELECT ?light ?lc ?os
+WHERE {
+  ?light a <http://buildsys.org/ontologies/Brick#Lighting> ;
+       <http://buildsys.org/ontologies/BrickFrame#hasPoint> ?lc ;
+       <http://buildsys.org/ontologies/BrickFrame#hasPoint> ?os.
+  ?lc a <http://buildsys.org/ontologies/Brick#Luminance_Command> .
+  ?os a <http://buildsys.org/ontologies/Brick#Occupancy_Sensor> .
+}

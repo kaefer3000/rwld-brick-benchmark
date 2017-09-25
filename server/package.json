@@ -1,0 +1,23 @@
+{
+  "name": "rwld-ssn-property-server",
+  "version": "0.0.1",
+  "description": "A server that serves writeable ssn properties",
+  "main": "index.js",
+  "dependencies": {
+    "morgan": "^1.7.0",
+    "rdf-ext": "^0.3.0",
+    "rdf-formats-common": "^0.3.0",
+    "rdf-body-parser": "git://github.com/kaefer3000/rdf-body-parser.git",
+    "express": "^4.14.0",
+    "body-parser": "^1.15.2",
+    "rdf-serializer-rdfxml": "git://github.com/kaefer3000/rdf-serializer-rdfxml.git",
+    "minimist": "^1.2.0"
+  },
+  "devDependencies": {},
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": "https://github.com/kaefer3000/rwld-ssn-property-server.git",
+  "keywords": [],
+  "license": "MIT"
+}
