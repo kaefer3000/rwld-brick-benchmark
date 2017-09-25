@@ -1,5 +1,8 @@
 #!/bin/sh
 
+# fail the script if a command fails
+set -e
+
 SCRIPTDIR=$(dirname "$(readlink -f "$0")")
 LDF_VERSION="0.9.12"
 LDF_DIR="$SCRIPTDIR/linked-data-fu-$LDF_VERSION"
@@ -64,6 +67,9 @@ awk -f "scripts/ssn-properties-for-things.awk" queries-and-results/IBM_B3-lights
 ##
 ##  Starting up the server for all lights, sensors, and switches
 ##
+
+# installing server dependencies
+npm --prefix server install
 
 tail -q -n+2                   `# skip the CSV headers silently` \
     queries-and-results/IBM_B3-lights.tsv queries-and-results/IBM_B3-occupancy-sensors.tsv queries-and-results/IBM_B3-luminance-commands.tsv \
