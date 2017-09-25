@@ -1,0 +1,6 @@
+[submodule "brick/GroundTruth"]
+	path = brick/GroundTruth
+	url = https://github.com/BuildSysUniformMetadata/GroundTruth
+[submodule "brick/Brick"]
+	path = brick/Brick
+	url = https://github.com/BuildSysUniformMetadata/Brick
