@@ -72,7 +72,9 @@ awk -f "scripts/ssn-properties-for-things.awk" queries-and-results/IBM_B3-lights
 npm --prefix server install
 
 tail -q -n+2                   `# skip the CSV headers silently` \
-    queries-and-results/IBM_B3-lights.tsv queries-and-results/IBM_B3-occupancy-sensors.tsv queries-and-results/IBM_B3-luminance-commands.tsv \
-  | awk -F'#' '{ print $2 }'     `# extract the fragment identifiers` \
+    queries-and-results/IBM_B3-lights.tsv \
+    queries-and-results/IBM_B3-occupancy-sensors.tsv \
+    queries-and-results/IBM_B3-luminance-commands.tsv \
+  | awk -F'#' '{ print $2 }'   `# extract the fragment identifiers` \
   | xargs node server/index.js `# startup the server with the fragment identifiers`
 
