@@ -1,4 +1,4 @@
-#!/usr/bin/awk
+#!/usr/bin/awk -f
 
 #
 # Creates ssn:hasProperty links for all local names of hash URIs supplied.
