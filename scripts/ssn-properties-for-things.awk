@@ -15,7 +15,7 @@ BEGIN {
 
 # The line-by-line processing:
 {
-  if ( NR > 1) { # ignoring CSV header
+  if (NR > 1) { # ignoring CSV header
     print ("<" $1 "#" $2 ">", "ssn:hasProperty", "<" $2 "#it>", ".") ;
   }
 }
