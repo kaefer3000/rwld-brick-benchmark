@@ -1,5 +1,7 @@
 #!/bin/bash
 
+set -e
+
 SCRIPTDIR=$(dirname "$(readlink -f "$0")")
 LDF_VERSION="0.9.12"
 LDF_DIR="$SCRIPTDIR/linked-data-fu-$LDF_VERSION"
@@ -30,7 +32,9 @@ function startserver {
 
       sleep 10
 
-      find $MOLTMPDIR/ -type f | xargs -l1 curl -X PUT localhost:8081/ldbbc/ -Hcontent-type:text/turtle -T
+      for file in $(find $MOLTMPDIR/ -type f) ; do
+        curl -f -X PUT localhost:8081/ldbbc/ -Hcontent-type:text/turtle -T $file
+      done
 
       ;;
 
