@@ -1,11 +1,6 @@
 # rwld-brick-benchmark
 A benchmark for Read-Write Linked Data clients
 
-## Coding convention
-* For `.gitignore` to tell between source files and intermediary files
-  * All intermediary RDF data be N-Triples (`.nt`)
-  * All intermediary SPARQL query results be tab-separated (`.tsv`)
-
 ## Evaluation directions
 * Variables vs. enumerated terms
   * Enumerate all switches, lights, etc. (building hundreds of rules instead of having variables)
