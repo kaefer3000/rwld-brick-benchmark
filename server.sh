@@ -80,8 +80,8 @@ function stopserver {
       ;;
   esac
 
-  if [ -f "$TMPDIR"/$1-server.pid ] ; then
-    $KCMD $(cat "$TMPDIR"/$1-server.pid) && echo "Stopped $1 server" >&2 && rm "$TMPDIR"/server-$1.pid
+  if [ -f "$TMPDIR"/server-$1.pid ] ; then
+    $KCMD $(cat "$TMPDIR"/server-$1.pid) && echo "Stopped $1 server" >&2 && rm "$TMPDIR"/server-$1.pid
   else
     echo "No $1 server to stop" >&2
   fi
