@@ -1,8 +1,6 @@
 # Own stuff
-*.nt
+tmp/
 linked-data-fu*/
-*.tsv
-
 
 # Logs
 logs

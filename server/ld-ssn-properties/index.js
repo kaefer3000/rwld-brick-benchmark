@@ -94,10 +94,14 @@ var propertyBaseGraphOff = propertyBaseGraph.merge([offTriple]);
 app.route("/:id").get(function(request, response) {
 
   var id = request.params.id;
-  if (! id in resourceInOnState)
+  var state = resourceInOnState[id];
+  if (! (id in resourceInOnState))
     response.sendStatus(404);
 
-  if (resourceInOnState[id])
+  if (("r" in argv) && ((typeof argv.r === "object" && id in argv.r) || (id == argv.r)))
+    state = Math.sin(id.hashCode() + new Date()/1000) < 0; // periodically changing with a resource-specific offset. The divisor can be used to control the speed of changes.
+
+  if (state)
     response.sendGraph(propertyBaseGraphOn);
   else
     response.sendGraph(propertyBaseGraphOff);
@@ -106,7 +110,7 @@ app.route("/:id").get(function(request, response) {
 app.route("/:id").put(function(request, response) {
 
   var id = request.params.id;
-  if (! id in resourceInOnState)
+  if (! (id in resourceInOnState))
     response.sendStatus(404);
 
   var statetriple;
@@ -155,4 +159,15 @@ app.listen(port, function () {
 
 // For finding the server in the network, some handy output on the console
 console.log(require('os').networkInterfaces());
+
+String.prototype.hashCode = function() {
+  var hash = 0, i, chr;
+  if (this.length === 0) return hash;
+  for (i = 0; i < this.length; i++) {
+    chr   = this.charCodeAt(i);
+    hash  = ((hash << 5) - hash) + chr;
+    hash |= 0; // Convert to 32bit integer
+  }
+  return hash;
+};
 
