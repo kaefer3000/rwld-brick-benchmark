@@ -83,8 +83,8 @@ cat "$TMPDIR"/IBM_B3-p* brick/GroundTruth/building_instances/IBM_B3.ttl \
   | rapper -i turtle -o ntriples -I"http://ex.org" - `# converting to N-Triples` \
   | sed -E 's/\<\S*IBM_B3#(\S*)>/\1>/g'              `# making the building URIs relative` \
   | tee \
-    >( awk -v directory="$MOLTMPDIR" 'BEGIN {FS=" "} $(NF-1) ~ /^<[^hH]\S+>$/ { print >> directory"/"substr($(NF-1),2,length($(NF-1))-2) }' ) `# emit triples where the object  is from the building` \
-  |    awk -v directory="$MOLTMPDIR" 'BEGIN {FS=" "} $1      ~ /^<[^hH]\S+>$/ { print >> directory"/"substr($1     ,2,length($1     )-2) }'   `# emit triples where the subject is from the building`
+    >( awk -v directory="$MOLTMPDIR" 'BEGIN {FS=" "} $(NF-1) ~ /^<[^hH]\S+>$/ { print >> directory"/"substr($(NF-1),2,length($(NF-1))-2) ; fflush() }' ) `# emit triples where the object  is from the building` \
+  |    awk -v directory="$MOLTMPDIR" 'BEGIN {FS=" "} $1      ~ /^<[^hH]\S+>$/ { print >> directory"/"substr($1     ,2,length($1     )-2) ; fflush() }'   `# emit triples where the subject is from the building`
 
 ##
 ## Preparing servers
