@@ -4,3 +4,6 @@
 [submodule "brick/Brick"]
 	path = brick/Brick
 	url = https://github.com/BuildSysUniformMetadata/Brick
+[submodule "server/ldbbc"]
+	path = server/ldbbc
+	url = https://github.com/kaefer3000/ldbbc
