@@ -1,6 +1,10 @@
 # rwld-brick-benchmark
 A benchmark for Read-Write Linked Data clients
 
+## Usage
+* `./init.sh` To initialise data
+* `./server.sh start all` To start all servers
+
 ## Evaluation directions
 * Variables vs. enumerated terms
   * Enumerate all switches, lights, etc. (building hundreds of rules instead of having variables)
