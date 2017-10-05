@@ -86,6 +86,13 @@ cat "$TMPDIR"/IBM_B3-p* brick/GroundTruth/building_instances/IBM_B3.ttl \
     >( awk -v directory="$MOLTMPDIR" 'BEGIN {FS=" "} $(NF-1) ~ /^<[^hH]\S+>$/ { print >> directory"/"substr($(NF-1),2,length($(NF-1))-2) ; fflush() }' ) `# emit triples where the object  is from the building` \
   |    awk -v directory="$MOLTMPDIR" 'BEGIN {FS=" "} $1      ~ /^<[^hH]\S+>$/ { print >> directory"/"substr($1     ,2,length($1     )-2) ; fflush() }'   `# emit triples where the subject is from the building`
 
+
+##
+## Extracting rules for inverse properties.
+##
+
+./scripts/extract-inverse-property-rules-from-brick-application-examples.awk brick/GroundTruth/application_examples/RUN_APPS.py > $TMPDIR/brick-inverse-properties.n3
+
 ##
 ## Preparing servers
 ##
