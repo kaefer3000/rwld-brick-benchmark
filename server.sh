@@ -26,7 +26,7 @@ function startserver {
       ;;
 
     building)
-      mvn -f "server/ldbbc/pom.xml" -D"jetty.port=8081" jetty:run &
+      MAVEN_OPTS=-Dorg.slf4j.simpleLogger.log.org.eclipse.jetty.server.RequestLog=warn mvn -f "server/ldbbc/pom.xml" -D"jetty.port=8081" jetty:run &
 
       echo $! > "$TMPDIR"/server-building.pid
 
