@@ -1,0 +1,10 @@
+@prefix rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#> .
+@prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#>.
+# rdfs9
+{ ?xxx rdfs:subClassOf ?yyy . ?zzz rdf:type ?xxx . } => { ?zzz rdf:type ?yyy . } .
+
+# rdfs10
+#{ ?xxx rdf:type rdfs:Class . } => { ?xxx rdfs:subClassOf ?xxx . } .
+
+# rdfs11
+{ ?xxx rdfs:subClassOf ?yyy . ?yyy rdfs:subClassOf ?zzz . } => { ?xxx rdfs:subClassOf ?zzz . } .

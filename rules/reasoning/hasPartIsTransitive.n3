@@ -1,0 +1,4 @@
+@prefix bframe: <http://buildsys.org/ontologies/BrickFrame#> .
+
+# transititvity
+{ ?a bframe:hasPart ?b . ?b bframe:hasPart ?c . } => { ?a bframe:hasPart ?c . } .

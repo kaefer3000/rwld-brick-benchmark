@@ -73,6 +73,11 @@ awk -f "scripts/ssn-properties-for-things.awk" "$TMPDIR"/IBM_B3-occupancy-sensor
 awk -f "scripts/ssn-properties-for-things.awk" "$TMPDIR"/IBM_B3-lights.tsv \
   | rapper -i turtle -o turtle -I"http://buildsys.org/ontologies/examples/IBM_B3#" - > "$TMPDIR"/"IBM_B3-property-links-for-lights.ttl"
 
+for file in $(find $TMPDIR -type f -name 'IBM_B3-property-links-for-*ttl') ; do
+  NEWNAME=$(echo $file | sed 's/\.ttl$/.nt/')
+  rapper -i turtle -o ntriples $file > $NEWNAME
+done
+
 ##
 ## Extraction of triples that belong to building things into rdf molecules
 ##

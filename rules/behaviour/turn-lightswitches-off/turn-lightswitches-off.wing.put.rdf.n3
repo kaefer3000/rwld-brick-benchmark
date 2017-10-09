@@ -1,0 +1,30 @@
+@prefix building: <http://buildsys.org/ontologies/examples/IBM_B3#> .
+
+@prefix brick: <http://buildsys.org/ontologies/Brick#> .
+@prefix bframe: <http://buildsys.org/ontologies/BrickFrame#> .
+@prefix http: <http://www.w3.org/2011/http#>.
+@prefix http_m: <http://www.w3.org/2011/http-methods#>.
+@prefix rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#> .
+@prefix saref: <https://w3id.org/saref#> .
+@prefix ssn: <http://www.w3.org/ns/ssn/> .
+
+{
+  ?command a brick:Luminance_Command ;
+    ssn:hasProperty ?propcomm ;
+    bframe:isLocatedIn ?room .
+  ?room bframe:isPartOf building:Wing_SOR46 .
+}
+=>
+{
+  [] http:mthd http_m:PUT; http:requestURI ?propcomm ; http:body { ?propcomm  rdf:value saref:Off . } .
+} .
+
+{
+  ?command a brick:Luminance_Command ;
+    ssn:hasProperty ?propcomm ;
+    bframe:isLocatedIn building:Wing_SOR46 .
+}
+=>
+{
+  [] http:mthd http_m:PUT; http:requestURI ?propcomm ; http:body { ?propcomm  rdf:value saref:Off . } .
+} .

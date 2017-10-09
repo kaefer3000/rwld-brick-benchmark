@@ -1,0 +1,63 @@
+@prefix building: <http://localhost:8081/ldbbc/> .
+
+@prefix brick: <http://buildsys.org/ontologies/Brick#> .
+@prefix bframe: <http://buildsys.org/ontologies/BrickFrame#> .
+@prefix http: <http://www.w3.org/2011/http#>.
+@prefix http_m: <http://www.w3.org/2011/http-methods#>.
+@prefix rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#> .
+@prefix saref: <https://w3id.org/saref#> .
+@prefix ssn: <http://www.w3.org/ns/ssn/> .
+
+building:fiverooms bframe:hasPart
+building:Room_SOR42_F_8 , building:Room_SOR42_F_9 , building:Room_SOR42_F_21 , building:Room_SOR42_F_13 , building:Room_SOR42_F_16 .
+
+building:tenrooms bframe:hasPart
+building:Room_SOR42_F_6 , building:Room_SOR42_F_7 , building:Room_SOR42_F_8 , building:Room_SOR42_F_9 , building:Room_SOR42_F_21 , building:Room_SOR42_F_13 , building:Room_SOR42_F_16 , building:Room_SOR42_F_14 , building:Room_SOR42_F_15 .
+
+building:twentyrooms bframe:hasPart building:Room_SOR42_F_15 ,
+building:Room_SOR42_F_16 ,
+building:Room_SOR42_F_1 ,
+building:Room_SOR42_F_2 ,
+building:Room_SOR42_F_18 ,
+building:Room_SOR42_F_19 ,
+building:Room_SOR42_F_14 ,
+building:Room_SOR42_F_17 ,
+building:Room_SOR42_F_13 ,
+building:Room_SOR42_F_WC ,
+building:Room_SOR42_F_21 ,
+building:Room_SOR42_F_22 ,
+building:Room_SOR42_F_23 ,
+building:Room_SOR42_F_7 ,
+building:Room_SOR42_F_5 ,
+building:Room_SOR42_F_8 ,
+building:Room_SOR42_F_9 ,
+building:Room_SOR42_F_4 ,
+building:Room_SOR42_F_6 ,
+building:Room_SOR42_F_20 .
+
+{ [] http:mthd http_m:GET; http:requestURI building:Wing_SOR46 . }
+
+{
+  building:Wing_SOR46 bframe:hasPart ?part .
+}
+=>
+{
+  [] http:mthd http_m:GET; http:requestURI ?part .
+} .
+
+{
+  building:Wing_SOR46 bframe:hasPart ?space .
+  ?thing bframe:isLocatedIn ?space .
+}
+=>
+{
+  [] http:mthd http_m:GET; http:requestURI ?thing .
+} .
+
+{
+  ?thing bframe:isLocatedIn building:Wing_SOR46 .
+}
+=>
+{
+  [] http:mthd http_m:GET; http:requestURI ?thing .
+} .

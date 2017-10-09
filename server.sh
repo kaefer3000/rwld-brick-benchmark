@@ -26,6 +26,11 @@ function startserver {
       ;;
 
     building)
+      if [ -f "$TMPDIR"/server-building.pid ] ; then
+        echo "building server already running" >&2
+        return
+      fi
+
       MAVEN_OPTS=-Dorg.slf4j.simpleLogger.log.org.eclipse.jetty.server.RequestLog=warn mvn -f "server/ldbbc/pom.xml" -D"jetty.port=8081" jetty:run &
 
       echo $! > "$TMPDIR"/server-building.pid
@@ -45,6 +50,11 @@ function startserver {
       ;;
 
     property)
+      if [ -f "$TMPDIR"/server-property.pid ] ; then
+        echo "property server already running" >&2
+        return
+      fi
+
       # special treatment for occupancy sensors, as they should (not) sense at random
       OCCSENS=$(tail -q -n+2                                        `# skip the CSV headers silently` \
           "$TMPDIR"/IBM_B3-occupancy-sensors.tsv \
