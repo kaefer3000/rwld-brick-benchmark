@@ -57,6 +57,11 @@ $LDF_DIR/bin/ldfu.sh \
   -i "$TMPDIR"/IBM_B3_rdfsplus.ttl \
   -q queries/occupancy-sensors.rq "$TMPDIR"/IBM_B3-occupancy-sensors.tsv
 
+# Extract all luminance sensors
+$LDF_DIR/bin/ldfu.sh \
+  -i "$TMPDIR"/IBM_B3_rdfsplus.ttl \
+  -q queries/luminance-sensors.rq "$TMPDIR"/IBM_B3-luminance-sensors.tsv
+
 # Extract all lights that can be switched and have an occupancy sensor
 $LDF_DIR/bin/ldfu.sh \
   -i "$TMPDIR"/IBM_B3_rdfsplus.ttl \
@@ -70,6 +75,8 @@ awk -f "scripts/ssn-properties-for-things.awk" "$TMPDIR"/IBM_B3-luminance-comman
   | rapper -i turtle -o turtle -I"http://buildsys.org/ontologies/examples/IBM_B3#" - > "$TMPDIR"/"IBM_B3-property-links-for-luminance-commands.ttl"
 awk -f "scripts/ssn-properties-for-things.awk" "$TMPDIR"/IBM_B3-occupancy-sensors.tsv \
   | rapper -i turtle -o turtle -I"http://buildsys.org/ontologies/examples/IBM_B3#" - > "$TMPDIR"/"IBM_B3-property-links-for-occupancy-sensors.ttl"
+awk -f "scripts/ssn-properties-for-things.awk" "$TMPDIR"/IBM_B3-luminance-sensors.tsv \
+  | rapper -i turtle -o turtle -I"http://buildsys.org/ontologies/examples/IBM_B3#" - > "$TMPDIR"/"IBM_B3-property-links-for-luminance-sensors.ttl"
 awk -f "scripts/ssn-properties-for-things.awk" "$TMPDIR"/IBM_B3-lights.tsv \
   | rapper -i turtle -o turtle -I"http://buildsys.org/ontologies/examples/IBM_B3#" - > "$TMPDIR"/"IBM_B3-property-links-for-lights.ttl"
 

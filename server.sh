@@ -58,12 +58,17 @@ function startserver {
       # special treatment for occupancy sensors, as they should (not) sense at random
       OCCSENS=$(tail -q -n+2                                        `# skip the CSV headers silently` \
           "$TMPDIR"/IBM_B3-occupancy-sensors.tsv \
-        | awk -F'#' '{ print "-r", $2 }' | xargs echo)
+        | awk -F'#' '{ print "-o", $2 }' | xargs echo)
+      LUMSENS=$(tail -q -n+2                                        `# skip the CSV headers silently` \
+          "$TMPDIR"/IBM_B3-luminance-sensors.tsv \
+        | awk -F'#' '{ print "-l", $2 }' | xargs echo)
+
 
       tail -q -n+2                                                  `# skip the CSV headers silently` \
           "$TMPDIR"/IBM_B3-lights.tsv \
           "$TMPDIR"/IBM_B3-occupancy-sensors.tsv \
           "$TMPDIR"/IBM_B3-luminance-commands.tsv \
+          "$TMPDIR"/IBM_B3-luminance-sensors.tsv \
         | awk -F'#' '{ print $2 }'                                  `# extract the fragment identifiers` \
         | (xargs node server/ld-ssn-properties/index.js $OCCSENS )& `# startup the server with the fragment identifiers`
 

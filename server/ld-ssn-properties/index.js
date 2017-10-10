@@ -73,10 +73,6 @@ propertyBaseGraph.addAll(
     new rdf.Triple(
       new rdf.NamedNode('#it'),
       new rdf.NamedNode('http://www.w3.org/1999/02/22-rdf-syntax-ns#type'),
-      new rdf.NamedNode('http://www.w3.org/ns/sosa/ActuableProperty')),
-    new rdf.Triple(
-      new rdf.NamedNode('#it'),
-      new rdf.NamedNode('http://www.w3.org/1999/02/22-rdf-syntax-ns#type'),
       new rdf.NamedNode('http://www.w3.org/ns/sosa/ObservableProperty'))
   ])
 var onTriple = new rdf.Triple(
@@ -87,9 +83,25 @@ var offTriple = new rdf.Triple(
                       new rdf.NamedNode('#it'),
                       new rdf.NamedNode('http://www.w3.org/1999/02/22-rdf-syntax-ns#value'),
                       new rdf.NamedNode('https://w3id.org/saref#Off'));
+var rdfvalue = new rdf.NamedNode('http://www.w3.org/1999/02/22-rdf-syntax-ns#value');
+var localIt = new rdf.NamedNode('#it');
+var xsddouble = new rdf.NamedNode('http://www.w3.org/2001/XMLSchema#double');
+
 
 var propertyBaseGraphOn = propertyBaseGraph.merge([onTriple]);
 var propertyBaseGraphOff = propertyBaseGraph.merge([offTriple]);
+var actuablePropertyBaseGraphOn = propertyBaseGraphOn.merge([
+  new rdf.Triple(
+    new rdf.NamedNode('#it'),
+    new rdf.NamedNode('http://www.w3.org/1999/02/22-rdf-syntax-ns#type'),
+    new rdf.NamedNode('http://www.w3.org/ns/sosa/ActuableProperty'))
+  ]);
+var actuablePropertyBaseGraphOff = propertyBaseGraphOff.merge([
+  new rdf.Triple(
+    new rdf.NamedNode('#it'),
+    new rdf.NamedNode('http://www.w3.org/1999/02/22-rdf-syntax-ns#type'),
+    new rdf.NamedNode('http://www.w3.org/ns/sosa/ActuableProperty'))
+  ]);
 
 app.route("/:id").get(function(request, response) {
 
@@ -97,14 +109,26 @@ app.route("/:id").get(function(request, response) {
   var state = resourceInOnState[id];
   if (! (id in resourceInOnState))
     response.sendStatus(404);
+  var isOccupancySensorProperty = ("o" in argv) && ((typeof argv.o === "object" && id in argv.o) || (id == argv.o));
+  var isLuminanceSensorProperty = ("l" in argv) && ((typeof argv.l === "object" && id in argv.l) || (id == argv.l));
 
-  if (("r" in argv) && ((typeof argv.r === "object" && id in argv.r) || (id == argv.r)))
+  if (isOccupancySensorProperty)
     state = Math.sin(id.hashCode() + new Date()/1000) < 0; // periodically changing with a resource-specific offset. The divisor can be used to control the speed of changes.
+  else if (isLuminanceSensorProperty) {
+    var value = (Math.sin(id.hashCode() + new Date()/10000) + 1)/2; // periodically changing with a resource-specific offset. The divisor can be used to control the speed of changes.
+    response.sendGraph(propertyBaseGraph.merge([new rdf.Triple(localIt,rdfvalue,new rdf.Literal(value,null,xsddouble))]))
+  }
 
-  if (state)
-    response.sendGraph(propertyBaseGraphOn);
+  if (isOccupancySensorProperty)
+    if (state)
+      response.sendGraph(propertyBaseGraphOn);
+    else
+      response.sendGraph(propertyBaseGraphOff);
   else
-    response.sendGraph(propertyBaseGraphOff);
+    if (state)
+      response.sendGraph(actuablePropertyBaseGraphOn);
+    else
+      response.sendGraph(actuablePropertyBaseGraphOn);
 });
 
 app.route("/:id").put(function(request, response) {
