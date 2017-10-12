@@ -43,6 +43,10 @@ function startserver {
 
       curl -f -X PUT localhost:8081/ldbbc/ -Hcontent-type:text/turtle -T $SCRIPTDIR/brick/GroundTruth/building_instances/IBM_B3.ttl
 
+      for file in $(find $SCRIPTDIR/brick/GroundTruth/Brick/ -name 'B*ttl' -type f) ; do
+        curl -f -X PUT localhost:8081/ldbbc/ -Hcontent-type:text/turtle -T $file
+      done
+
       for file in $(find $TMPDIR -type f -name 'IBM_B3-property-links-for-*ttl') ; do
         curl -f -X PUT localhost:8081/ldbbc/ -Hcontent-type:text/turtle -T $file
       done
