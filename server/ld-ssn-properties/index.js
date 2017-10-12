@@ -30,10 +30,30 @@ var configuredBodyParser = rdfBodyParser({'defaultMediaType' : 'text/turtle', 'f
 
 var argv = minimist(process.argv.slice(2));
 
+var cliToResourceType = { "o" : "dynamic" , "l" : "dynamic" , "s" : "ternary" , "b" : "binary" };
+
+var typesOfResources = {};
+var statesOfResources = {};
+var dictArgv = {};
+
 // Reading CLI
-var resourceInOnState = {};
-for (thing in argv._) {
-  resourceInOnState[argv._[thing]] = false;
+function setResourceStateAndType(typesOfResources, statesOfResources, dictArgv, cliArgument, resourceName, resourceType) {
+  typesOfResources[resourceName] = resourceType;
+  if (! (cliArgument in dictArgv)) 
+    dictArgv[cliArgument] = {};
+
+  dictArgv[cliArgument][resourceName] = true;
+  if (resourceType === "ternary")
+    statesOfResources[resourceName] = "neutral";
+  else if (cliToResourceType[cliArgument] === "binary")
+    statesOfResources[resourceName] = "off";
+}
+for (var cliArgument in cliToResourceType) {
+  if (typeof argv[cliArgument] === "object")
+    for (var key in argv[cliArgument])
+      setResourceStateAndType(typesOfResources, statesOfResources, dictArgv, cliArgument, argv[cliArgument][key], cliToResourceType[cliArgument]);
+  else if (typeof argv[cliArgument] === "string")
+      setResourceStateAndType(typesOfResources, statesOfResources, dictArgv, cliArgument, argv[cliArgument], cliToResourceType[cliArgument]);
 }
 
 // configuring the app
@@ -42,10 +62,9 @@ app.set('strict routing', true);
 //app.use(logger('dev'));
 app.use(configuredBodyParser);
 
-
 // On root, we serve an overview
 var rootGraph = rdf.createGraph();
-for (resource in resourceInOnState) {
+for (resource in typesOfResources) {
   rootGraph.add(
     new rdf.Triple(
       new rdf.NamedNode(''),
@@ -83,10 +102,14 @@ var offTriple = new rdf.Triple(
                       new rdf.NamedNode('#it'),
                       new rdf.NamedNode('http://www.w3.org/1999/02/22-rdf-syntax-ns#value'),
                       new rdf.NamedNode('https://w3id.org/saref#Off'));
+var neutralTriple = new rdf.Triple(
+                      new rdf.NamedNode('#it'),
+                      new rdf.NamedNode('http://www.w3.org/1999/02/22-rdf-syntax-ns#value'),
+                      new rdf.NamedNode('http://example.org/Neutral'));
 var rdfvalue = new rdf.NamedNode('http://www.w3.org/1999/02/22-rdf-syntax-ns#value');
 var localIt = new rdf.NamedNode('#it');
 var xsddouble = new rdf.NamedNode('http://www.w3.org/2001/XMLSchema#double');
-
+var qudtNumericValue = new rdf.NamedNode('http://qudt.org/schema/qudt#numericValue');
 
 var propertyBaseGraphOn = propertyBaseGraph.merge([onTriple]);
 var propertyBaseGraphOff = propertyBaseGraph.merge([offTriple]);
@@ -102,40 +125,93 @@ var actuablePropertyBaseGraphOff = propertyBaseGraphOff.merge([
     new rdf.NamedNode('http://www.w3.org/1999/02/22-rdf-syntax-ns#type'),
     new rdf.NamedNode('http://www.w3.org/ns/sosa/ActuableProperty'))
   ]);
+var actuablePropertyBaseGraphNeutral = propertyBaseGraph.merge([
+  neutralTriple,
+  new rdf.Triple(
+    new rdf.NamedNode('#it'),
+    new rdf.NamedNode('http://www.w3.org/1999/02/22-rdf-syntax-ns#type'),
+    new rdf.NamedNode('http://www.w3.org/ns/sosa/ActuableProperty'))
+  ]);
 
 app.route("/:id").get(function(request, response) {
 
   var id = request.params.id;
-  var state = resourceInOnState[id];
-  if (! (id in resourceInOnState))
+  if (! (id in typesOfResources)) {
     response.sendStatus(404);
-  var isOccupancySensorProperty = ("o" in argv) && ((typeof argv.o === "object" && id in argv.o) || (id == argv.o));
-  var isLuminanceSensorProperty = ("l" in argv) && ((typeof argv.l === "object" && id in argv.l) || (id == argv.l));
-
-  if (isOccupancySensorProperty)
-    state = Math.sin(id.hashCode() + new Date()/1000) < 0; // periodically changing with a resource-specific offset. The divisor can be used to control the speed of changes.
-  else if (isLuminanceSensorProperty) {
-    var value = (Math.sin(id.hashCode() + new Date()/10000) + 1)/2; // periodically changing with a resource-specific offset. The divisor can be used to control the speed of changes.
-    response.sendGraph(propertyBaseGraph.merge([new rdf.Triple(localIt,rdfvalue,new rdf.Literal(value,null,xsddouble))]))
+    return;
   }
 
-  if (isOccupancySensorProperty)
-    if (state)
-      response.sendGraph(propertyBaseGraphOn);
-    else
-      response.sendGraph(propertyBaseGraphOff);
-  else
-    if (state)
-      response.sendGraph(actuablePropertyBaseGraphOn);
-    else
-      response.sendGraph(actuablePropertyBaseGraphOn);
+  var state;
+  switch (typesOfResources[id]) {
+    case "dynamic":
+      if ("o" in dictArgv && id in dictArgv["o"])
+        // occupancy sensor:
+        // periodically changing with a resource-specific offset. The divisor can be used to control the speed of changes.
+        state = Math.sin(id.hashCode() + new Date()/1000) < 0; 
+      else if ("l" in dictArgv && id in dictArgv["l"])
+        // luminance sensor:
+        // periodically changing with a resource-specific offset. The divisor can be used to control the speed of changes.
+        state = (Math.sin(id.hashCode() + new Date()/10000) + 1)/2;
+      else {
+        response.status(500);
+        response.send("resource with unknown dynamic type: " + id);
+        return;
+      }
+      break;
+    case "ternary":
+    case "binary":
+      state = statesOfResources[id];
+      break;
+    default:
+      response.status(500);
+      response.send("resource " + id + " has unknown type " + typesOfResources[id]);
+      return;
+  }
+
+  switch (typeof state) {
+    case "string":
+    case "boolean":
+      if (state === true || state === "on") {
+        if (("s" in dictArgv && id in dictArgv["s"])
+            || ("b" in dictArgv && id in dictArgv["b"]))
+          // switches and lights are the only actuable things
+          response.sendGraph(actuablePropertyBaseGraphOn);
+        else
+          response.sendGraph(propertyBaseGraphOn);
+      } else if (state === false || state === "off") {
+        if (("s" in dictArgv && id in dictArgv["s"])
+            || ("b" in dictArgv && id in dictArgv["b"]))
+          // switches and lights are the only actuable things
+          response.sendGraph(actuablePropertyBaseGraphOff);
+        else
+          response.sendGraph(propertyBaseGraphOff);
+      } else if (state === "neutral")
+        response.sendGraph(actuablePropertyBaseGraphNeutral);
+      else
+        response.status(500).send("resource " + id + " has unknown string/boolean state " + state);
+      break;
+    case "number":
+      response.sendGraph(propertyBaseGraph.merge([new rdf.Triple(localIt,qudtNumericValue,new rdf.Literal(state,null,xsddouble))]))
+      break;
+    default:
+      response.status(500).send("resource " + id + " has unknown state " + state);
+      break;
+  }
 });
 
 app.route("/:id").put(function(request, response) {
 
   var id = request.params.id;
-  if (! (id in resourceInOnState))
+  if (! (id in typesOfResources)) {
     response.sendStatus(404);
+    return;
+  }
+
+  if (!(("s" in dictArgv && id in dictArgv["s"])
+      || ("b" in dictArgv && id in dictArgv["b"]))) {
+    response.status(400).send('Only lights and switches are actuable');
+    return;
+  }
 
   var statetriple;
   var targetStateTripleCount = 0;
@@ -152,14 +228,16 @@ app.route("/:id").put(function(request, response) {
     return;
   }
 
-  var targetState;
   if (statetriple.object.interfaceName === 'NamedNode') {
     switch (statetriple.object.nominalValue) {
       case "https://w3id.org/saref#On":
-        targetState = true;
+        statesOfResources[id] = true;
         break;
       case "https://w3id.org/saref#Off":
-        targetState = false;
+        statesOfResources[id] = false;
+        break;
+      case "http://example.org/Neutral":
+        statesOfResources[id] = "neutral";
         break;
       default:
         response.status(400);
