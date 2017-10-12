@@ -48,13 +48,16 @@ function setResourceStateAndType(typesOfResources, statesOfResources, dictArgv, 
   else if (cliToResourceType[cliArgument] === "binary")
     statesOfResources[resourceName] = "off";
 }
-for (var cliArgument in cliToResourceType) {
-  if (typeof argv[cliArgument] === "object")
-    for (var key in argv[cliArgument])
-      setResourceStateAndType(typesOfResources, statesOfResources, dictArgv, cliArgument, argv[cliArgument][key], cliToResourceType[cliArgument]);
-  else if (typeof argv[cliArgument] === "string")
-      setResourceStateAndType(typesOfResources, statesOfResources, dictArgv, cliArgument, argv[cliArgument], cliToResourceType[cliArgument]);
+function readCli() {
+  for (var cliArgument in cliToResourceType) {
+    if (typeof argv[cliArgument] === "object")
+      for (var key in argv[cliArgument])
+        setResourceStateAndType(typesOfResources, statesOfResources, dictArgv, cliArgument, argv[cliArgument][key], cliToResourceType[cliArgument]);
+    else if (typeof argv[cliArgument] === "string")
+        setResourceStateAndType(typesOfResources, statesOfResources, dictArgv, cliArgument, argv[cliArgument], cliToResourceType[cliArgument]);
+  }
 }
+readCli();
 
 // configuring the app
 app.set('case sensitive routing', true);
@@ -75,6 +78,11 @@ for (resource in typesOfResources) {
 }
 app.get('/', function(request, response) {
   response.sendGraph(rootGraph);
+});
+app.delete('/', function(request, response) {
+  // To reset the server
+  readCli();
+  response.sendStatus(204);
 });
 
 // basic graph for all resources but root
