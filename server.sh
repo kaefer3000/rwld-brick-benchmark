@@ -69,11 +69,14 @@ function startserver {
       SWITCHES=$(tail -q -n+2                                        `# skip the CSV headers silently` \
           "$TMPDIR"/IBM_B3-luminance-commands.tsv \
         | awk -F'#' '{ print "-s", $2 }' | xargs echo)
+      ALARMS=$(tail -q -n+2                                          `# skip the CSV headers silently` \
+          "$TMPDIR"/IBM_B3-luminance-alarms.tsv \
+        | awk -F'#' '{ print "-s", $2 }' | xargs echo)
       LIGHTS=$(tail -q -n+2                                          `# skip the CSV headers silently` \
           "$TMPDIR"/IBM_B3-lights.tsv \
         | awk -F'#' '{ print "-b", $2 }' | xargs echo)
 
-      node server/ld-ssn-properties/index.js $OCCSENS $LUMSENS $SWITCHES $LIGHTS & `# startup the server with the fragment identifiers`
+      node server/ld-ssn-properties/index.js $OCCSENS $LUMSENS $SWITCHES $LIGHTS $ALARMS & `# startup the server with the fragment identifiers`
 
       echo $! > "$TMPDIR"/server-property.pid
       ;;

@@ -30,7 +30,7 @@ var configuredBodyParser = rdfBodyParser({'defaultMediaType' : 'text/turtle', 'f
 
 var argv = minimist(process.argv.slice(2));
 
-var cliToResourceType = { "o" : "dynamic" , "l" : "dynamic" , "s" : "ternary" , "b" : "binary" };
+var cliToResourceType = { "o" : "dynamic" , "l" : "dynamic" , "s" : "ternary" , "b" : "binary", "f" : "binary" };
 
 var typesOfResources = {};
 var statesOfResources = {};
