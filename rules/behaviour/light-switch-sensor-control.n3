@@ -5,16 +5,21 @@
 @prefix rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#> .
 @prefix saref: <https://w3id.org/saref#> .
 @prefix ssn: <http://www.w3.org/ns/ssn/> .
+@prefix ex: <http://example.org/> .
 
 # Requires no reasoning
 
-# Turn the light on if the corresponding occupancy sensor senses something
+# Turn the light on if the corresponding occupancy sensor senses something and the switch is neutral
 {
   ?light bframe:hasPoint ?command , ?sensor.
 
   ?light a brick:Lighting ;
     ssn:hasProperty ?proplight .
-  ?proplight rdf:value saref:Off .
+  ?proplight rdf:value ex:Off .
+
+  ?command a brick:Luminance_Command ;
+    ssn:hasProperty ?lightcomm .
+  ?lightcomm rdf:value ex:Neutral .
 
   ?sensor a brick:Occupancy_Sensor ;
     ssn:hasProperty ?propsens .
@@ -25,7 +30,28 @@
   [] http:mthd http_m:PUT; http:requestURI ?proplight ; http:body { ?proplight rdf:value saref:On . } . 
 } .
 
-# Turn the light on if the corresponding switch is on
+# If the occupancy sensor does not indicate that the light should be on and the switch is neutral, turn the light off
+{
+  ?light bframe:hasPoint ?command , ?sensor.
+
+  ?light a brick:Lighting ;
+    ssn:hasProperty ?proplight .
+  ?proplight rdf:value saref:On .
+
+  ?command a brick:Luminance_Command ;
+    ssn:hasProperty ?propcomm .
+  ?propcomm  rdf:value ex:Neutral .
+
+  ?sensor a brick:Occupancy_Sensor ;
+    ssn:hasProperty ?propsens .
+  ?propsens rdf:value saref:Off .
+}
+=>
+{
+  [] http:mthd http_m:PUT; http:requestURI ?proplight ; http:body { ?proplight rdf:value saref:Off . } . 
+} .
+
+# Turn the light on if the corresponding switch is on (manual override)
 {
   ?light bframe:hasPoint ?command , ?sensor.
 
@@ -42,21 +68,17 @@
   [] http:mthd http_m:PUT; http:requestURI ?proplight ; http:body { ?proplight rdf:value saref:On . } . 
 } .
 
-# If neither the occupancy sensor nor the switch indicate that the light should be on, turn the light off
+# Turn the light off if the corresponding switch is off (manual override)
 {
   ?light bframe:hasPoint ?command , ?sensor.
 
   ?light a brick:Lighting ;
     ssn:hasProperty ?proplight .
-  ?proplight rdf:value saref:On .
+  ?proplight rdf:value saref:On . 
 
   ?command a brick:Luminance_Command ;
     ssn:hasProperty ?propcomm .
   ?propcomm  rdf:value saref:Off .
-
-  ?sensor a brick:Occupancy_Sensor ;
-    ssn:hasProperty ?propsens .
-  ?propsens rdf:value saref:Off .
 }
 =>
 {
