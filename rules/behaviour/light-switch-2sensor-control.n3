@@ -1,0 +1,119 @@
+@prefix brick: <http://buildsys.org/ontologies/Brick#> .
+@prefix bframe: <http://buildsys.org/ontologies/BrickFrame#> .
+@prefix http: <http://www.w3.org/2011/http#>.
+@prefix http_m: <http://www.w3.org/2011/http-methods#>.
+@prefix rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#> .
+@prefix saref: <https://w3id.org/saref#> .
+@prefix ssn: <http://www.w3.org/ns/ssn/> .
+@prefix ex: <http://example.org/> .
+
+# Requires no reasoning
+
+# Turn the light on if the corresponding occupancy sensor senses something and the switch is neutral
+{
+  ?light bframe:hasPoint ?command , ?sensor.
+
+  ?light a brick:Lighting ;
+    ssn:hasProperty ?proplight .
+  ?proplight rdf:value ex:Off .
+
+  ?command a brick:Luminance_Command ;
+    ssn:hasProperty ?lightcomm .
+  ?lightcomm rdf:value ex:Neutral .
+
+  ?sensor a brick:Occupancy_Sensor ;
+    ssn:hasProperty ?propsens .
+  ?propsens rdf:value saref:On .
+}
+=>
+{
+  [] http:mthd http_m:PUT; http:requestURI ?proplight ; http:body { ?proplight rdf:value saref:On . } . 
+} .
+
+# If the occupancy sensor does not indicate that the light should be on and the switch is neutral, turn the light off
+{
+  ?light bframe:hasPoint ?command , ?occSensor, ?lumSensor.
+
+  ?light a brick:Lighting ;
+    ssn:hasProperty ?proplight .
+  ?proplight rdf:value saref:On .
+
+  ?command a brick:Luminance_Command ;
+    ssn:hasProperty ?propcomm .
+  ?propcomm  rdf:value ex:Neutral .
+
+  ?sensor a brick:Occupancy_Sensor ;
+    ssn:hasProperty ?propsens .
+  ?propsens rdf:value saref:Off .
+
+  ?lumSensor a brick:LuminanceSensor ;
+    ssn:hasProperty ?propLumSens ,
+  ?propLumSens qudt:numericalValue ?luminance .
+  ?luminance math:lessThan "0.7" .
+}
+=>
+{
+  [] http:mthd http_m:PUT; http:requestURI ?proplight ; http:body { ?proplight rdf:value saref:Off . } . 
+} .
+
+# Turn the light on if the corresponding switch is on (manual override)
+{
+  ?light bframe:hasPoint ?command , ?sensor.
+
+  ?light a brick:Lighting ;
+    ssn:hasProperty ?proplight .
+  ?proplight rdf:value saref:Off . 
+
+  ?command a brick:Luminance_Command ;
+    ssn:hasProperty ?propcomm .
+  ?propcomm  rdf:value saref:On .
+}
+=>
+{
+  [] http:mthd http_m:PUT; http:requestURI ?proplight ; http:body { ?proplight rdf:value saref:On . } . 
+} .
+
+# Turn the light off if the corresponding switch is off (manual override)
+{
+  ?light bframe:hasPoint ?command , ?sensor.
+
+  ?light a brick:Lighting ;
+    ssn:hasProperty ?proplight .
+  ?proplight rdf:value saref:On . 
+
+  ?command a brick:Luminance_Command ;
+    ssn:hasProperty ?propcomm .
+  ?propcomm  rdf:value saref:Off .
+}
+=>
+{
+  [] http:mthd http_m:PUT; http:requestURI ?proplight ; http:body { ?proplight rdf:value saref:Off . } . 
+} .
+
+
+# If the occupancy sensor does not indicate that the light should be on, but the luminance sensor, and the switch is neutral, turn the light on
+{
+  ?light bframe:hasPoint ?command , ?occSensor, ?lumSensor.
+
+  ?light a brick:Lighting ;
+    ssn:hasProperty ?proplight .
+  ?proplight rdf:value saref:On .
+
+  ?command a brick:Luminance_Command ;
+    ssn:hasProperty ?propcomm .
+  ?propcomm  rdf:value ex:Neutral .
+
+  ?sensor a brick:Occupancy_Sensor ;
+    ssn:hasProperty ?propsens .
+  ?propsens rdf:value saref:Off .
+
+  ?lumSensor a brick:LuminanceSensor ;
+    ssn:hasProperty ?propLumSens ,
+  ?propLumSens qudt:numericalValue ?luminance .
+  ?luminance math:notLessThan "0.7" .
+}
+=>
+{
+  [] http:mthd http_m:PUT; http:requestURI ?proplight ; http:body { ?proplight rdf:value saref:On . } . 
+} .
+
