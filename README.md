@@ -2,6 +2,7 @@
 A benchmark for Read-Write Linked Data clients
 
 ## Prerequisites
+* Java >= 7
 * Maven >= Version 3.1
 * WGET
 * CURL
