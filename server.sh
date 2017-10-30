@@ -19,9 +19,35 @@ function startserver {
   case $1 in
 
     all)
-      echo "starting both" >&2
+      echo "starting all" >&2
       startserver property
       startserver building
+      startserver time
+      startserver weather
+      return
+      ;;
+
+    time)
+      if [ -f "$TMPDIR"/server-time.pid ] ; then
+        echo "time server already running" >&2
+        return
+      fi
+      MAVEN_OPTS=-Dorg.slf4j.simpleLogger.log.org.eclipse.jetty.server.RequestLog=warn mvn -f "server/timeservlet/pom.xml" -D"jetty.port=8082" jetty:run &
+
+      echo $! > "$TMPDIR"/server-time.pid
+
+      return
+      ;;
+
+    weather)
+      if [ -f "$TMPDIR"/server-weather.pid ] ; then
+        echo "weather server already running" >&2
+        return
+      fi
+      node server/ld-weather-dummy/index.js -p 8083 &
+
+      echo $! > "$TMPDIR"/server-weather.pid
+
       return
       ;;
 
@@ -92,17 +118,19 @@ function stopserver {
   case $1 in
 
     all)
-      echo "stopping both" >&2
+      echo "stopping all" >&2
       stopserver property
       stopserver building
+      stopserver weather
+      stopserver time
       return
       ;;
 
-    building)
+    building|time|weather|property)
       KCMD="kill"
       ;;
 
-    property)
+    notUseFulAnyLonger)
       KCMD="pkill -P"
       ;;
 
