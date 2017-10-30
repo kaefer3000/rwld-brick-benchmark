@@ -105,12 +105,33 @@ cat "$TMPDIR"/IBM_B3-p* brick/GroundTruth/building_instances/IBM_B3.ttl \
     >( awk -v directory="$MOLTMPDIR" 'BEGIN {FS=" "} $(NF-1) ~ /^<[^hH]\S+>$/ { print >> directory"/"substr($(NF-1),2,length($(NF-1))-2) ; fflush() }' ) `# emit triples where the object  is from the building` \
   |    awk -v directory="$MOLTMPDIR" 'BEGIN {FS=" "} $1      ~ /^<[^hH]\S+>$/ { print >> directory"/"substr($1     ,2,length($1     )-2) ; fflush() }'   `# emit triples where the subject is from the building`
 
-
 ##
 ## Extracting rules for inverse properties.
 ##
 
 ./scripts/extract-inverse-property-rules-from-brick-application-examples.awk brick/GroundTruth/application_examples/RUN_APPS.py > $TMPDIR/brick-inverse-properties.n3
+
+##
+## Extracting subsets of the rooms in the building
+##
+
+WINGQUERY=$SCRIPTDIR/queries/parts-of.Wing_SOR46.rq
+cp $WINGQUERY $TMPDIR/$(basename $WINGQUERY)
+for set in "Room_SOR42_G_19" "fiverooms" "tenrooms" "twentyrooms" "Floor_FirstFloor" "Building_B3" ; do
+  NEWNAME=$(basename $(echo $WINGQUERY | sed "s/Wing_SOR46/$set/"))
+  sed "s/Wing_SOR46/$set/" $WINGQUERY > $TMPDIR/$NEWNAME
+done
+
+for file in $(find $SCRIPTDIR/tmp/ -name 'parts-of.*.rq'); do
+  set=$(echo $file | sed -E 's/.*parts-of\.(.*)\.rq/\1/')
+  $SCRIPTDIR/linked-data-fu-0.9.12/bin/ldfu.sh -i "$TMPDIR"/IBM_B3_rdfsplus.ttl -i $SCRIPTDIR/brick/n-rooms.ttl -q $file "$TMPDIR"/IBM_B3-parts-of.$set.tsv
+
+  touch "$TMPDIR"/turn-lightswitches-off.$set.get.n3
+  awk -f $SCRIPTDIR/scripts/extract-turn-off-lights-rules.awk "$TMPDIR"/IBM_B3-parts-of.$set.tsv > "$TMPDIR"/turn-lightswitches-off.$set.put.n3
+
+  touch "$TMPDIR"/toggle-lightswitches.$set.get.n3
+  touch "$TMPDIR"/toggle-lightswitches.$set.put.n3
+done
 
 ##
 ## Preparing servers
