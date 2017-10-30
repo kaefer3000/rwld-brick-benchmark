@@ -7,3 +7,6 @@
 [submodule "server/ldbbc"]
 	path = server/ldbbc
 	url = https://github.com/kaefer3000/ldbbc
+[submodule "server/timeservlet"]
+	path = server/timeservlet
+	url = https://github.com/kaefer3000/timeservlet
