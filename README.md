@@ -1,25 +1,31 @@
 # rwld-brick-benchmark
 A benchmark for Read-Write Linked Data clients
 
+## Prerequisites
+* Java >= 7
+* Maven >= Version 3.1
+* WGET
+* CURL
+* AWK
+* node.js
+
 ## Usage
 * `./init.sh` To initialise data
 * `./server.sh start all` To start all servers
+* `./benchmark.sh` To run the benchmarking script
 
 ## Evaluation directions
-* Variables vs. enumerated terms
-  * Enumerate all switches, lights, etc. (building hundreds of rules instead of having variables)
-* Networking
-  * Include external Web API
-    * Do something if the weather goes bad (another external Web API)
-  * Do something time-based (another -but local- web API)
-  * Building description not in one file, but as Linked Data
-    * Caching for mitigation?
-* Numerical Computation
-  * Check if there is a luminance sensor and only switch on if value below threshold (numeric comparison)
-* Reasoning
-  * Turn off all lights in a wing
-  * Implement reasoning from `RUN_APPS.py`
-  * Have all Brick and building data reasoned in one file vs. reason all the time on the base files
+* Data access:
+  * All data in one file on an HTTP server
+  * Deployed as Linked Data: RDF molecules from the materialised reasoning of Brick ontology + IBM B3 building description
+* Work loads:
+  * Turn on the lights - baseline - baseline
+  * Turn on the lights during working hours (eg. 8 am to 7 pm) - raising energy efficiency - adding conditions
+  * Turn on the lights if weather report says it is dark - raising energy efficiency - adding conditions and external API
+  * Turn on the lights if light sensors indicate - raising energy efficiency even more - numerical computations
+  * Turn on the lights if light sensors indicate (with individial thresholds) - adding individual preference for comfort - more numerical computations
+  
+  * Toggle the lights - adding conditions
 
 ## Misc
 * If the a switch serves as manual override, it should have a neutral state
