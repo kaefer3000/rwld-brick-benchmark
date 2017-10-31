@@ -43,7 +43,7 @@ done
 echo -ne "Reading the entire building from network. Median time [ms]:\t\t"
 (timeout $((500 * $SAFETYFACTOR * $ITERATIONS / 1000)) \
 ./linked-data-fu-0.9.12/bin/ldfu.sh -p rules/reasoning/hasPartIsTransitive.n3 -p tmp/brick-inverse-properties.n3 \
--i "http://localhost:8081/ldbbc/IBM_B3.ttl" -i "http://localhost:8081/ldbbc/IBM_B3-property-links-for-lights.ttl" -i "http://localhost:8081/ldbbc/IBM_B3-property-links-for-occupancy-sensors.ttl" -i "http://localhost:8081/ldbbc/IBM_B3-property-links-for-luminance-commands.ttl" \
+-i "http://localhost:8081/ldbbc/IBM_B3.ttl" -i "http://localhost:8081/ldbbc/IBM_B3-property-links-for-lights.ttl" -i "http://localhost:8081/ldbbc/IBM_B3-property-links-for-occupancy-sensors.ttl" -i "http://localhost:8081/ldbbc/IBM_B3-property-links-for-luminance-commands.ttl" -i "http://localhost:8081/ldbbc/IBM_B3-property-links-for-luminance-sensors.ttl" -i "http://localhost:8081/ldbbc/IBM_B3-property-links-for-luminance-alarms.ttl" -i "http://localhost:8081/ldbbc/IBM_B3-personal-comfort-values-for-luminance-sensors.ttl" \
 -p rules/behaviour/$2/$2.x.get.rdf.n3 -p rules/behaviour/$2/$2.x.put.rdf.n3 \
 -n 2>&1 ) | tee -a ldf.out | grep lapsed | head -$ITERATIONS | awk '{sub(/\./,"",$4); print $4}' | sort | ./scripts/median.awk
 
@@ -57,7 +57,8 @@ echo -ne "Reading the relevant Linked Data from the network. Median time [ms]:\t
 #(timeout $((600 * $SAFETYFACTOR * $ITERATIONS / 1000)) \
 #./linked-data-fu-0.9.12/bin/ldfu.sh -p tmp/$2.$1.get.n3 -p tmp/$2.$1.put.n3 \
 #-n 2>&1 ) | tee -a ldf.out | grep lapsed | head -$ITERATIONS | awk '{sub(/\./,"",$4); print $4}' | sort | ./scripts/median.awk
-#}
+
+}
 
 for behaviour in "turn-lightswitches-on" "toggle-lightswitches" ; do
   echo
