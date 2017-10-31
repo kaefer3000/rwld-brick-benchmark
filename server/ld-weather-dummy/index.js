@@ -17,7 +17,7 @@ var minimist = require('minimist');
 
 // Reading CLI
 var argv = minimist(process.argv.slice(2));
-var speedupFactor = typeof argv.s != "number" ? 1 : argv.s;
+var speedupFactor = typeof argv.speedup != "number" ? 1 : argv.speedup;
 
 var startupTime = new Date();
 
