@@ -15,7 +15,7 @@
 @prefix string: <http://www.w3.org/2000/10/swap/string#> .
 @prefix math: <http://www.w3.org/2000/10/swap/math#> .
 @prefix qudt: <http://qudt.org/schema/qudt#> .
-@prefix brack: <http://rwld-brick-benchmark.github.io/vocab#> -
+@prefix brack: <http://rwld-brick-benchmark.github.io/vocab#> .
 
 # Turn off stuff if there is sufficient light
 {
