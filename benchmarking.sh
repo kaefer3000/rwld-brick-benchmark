@@ -2,8 +2,8 @@
 
 set -e
 
-ITERATIONS=5
-SAFETYFACTOR=1
+ITERATIONS=20
+SAFETYFACTOR=2
 
 echo "=================================BRACK========================================="
 echo "======= Benchmarking Read-write user Agents and Clients for linKed data  ======"
@@ -19,6 +19,9 @@ echo "Benchmarking with $ITERATIONS iterations..."
 rm -f ldf.out
 
 function tlo {
+
+# Resetting the property server
+curl -qf -X DELETE http://localhost:8080/ 2> /dev/null > /dev/null
 
 for file in $(find rules/behaviour/ -name $2".wing.*n3"); do
   NEWNAME=$(echo $file | sed 's/wing/x/')
@@ -47,6 +50,9 @@ echo -ne "Reading the entire building from network. Median time [ms]:\t\t"
 -p rules/behaviour/$2/$2.x.get.rdf.n3 -p rules/behaviour/$2/$2.x.put.rdf.n3 \
 -n 2>&1 ) | tee -a ldf.out | grep lapsed | head -$ITERATIONS | awk '{sub(/\./,"",$4); print $4}' | sort | ./scripts/median.awk
 
+# Resetting the property server
+curl -qf -X DELETE http://localhost:8080/ 2> /dev/null > /dev/null
+
 echo -ne "Reading the relevant Linked Data from the network. Median time [ms]:\t"
 (timeout $((1300 * $SAFETYFACTOR * $ITERATIONS / 1000)) \
 ./linked-data-fu-0.9.12/bin/ldfu.sh -p rules/reasoning/hasPartIsTransitive.n3 -p tmp/brick-inverse-properties.n3 \
@@ -60,7 +66,7 @@ echo -ne "Reading the relevant Linked Data from the network. Median time [ms]:\t
 
 }
 
-for behaviour in "turn-lightswitches-on" "toggle-lightswitches" ; do
+for behaviour in "individual-light-sensor-based-control" "clock-based-control" "sun-hour-based-control" "light-sensor-based-control" "turn-lightswitches-on" ; do
   echo
   echo "============== behaviour: $behaviour =============="
   for place in Room_SOR42_G_19 fiverooms tenrooms twentyrooms Floor_FirstFloor Wing_SOR46 Building_B3 ; do
