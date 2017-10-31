@@ -1,0 +1,1 @@
+SELECT * WHERE { ?x a <http://buildsys.org/ontologies/Brick#Sensor> . }

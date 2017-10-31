@@ -1,0 +1,1 @@
+SELECT * WHERE { <http://buildsys.org/ontologies/examples/IBM_B3#Wing_SOR46> <http://buildsys.org/ontologies/BrickFrame#hasPart> ?x . }
