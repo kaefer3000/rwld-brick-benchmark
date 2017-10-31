@@ -16,7 +16,7 @@
 }
 =>
 {
-  [] http:mthd http_m:PUT; http:requestURI ?propcomm ; http:body { ?propcomm  rdf:value saref:Off . } .
+  [] http:mthd http_m:PUT; http:requestURI ?propcomm ; http:body { ?propcomm  rdf:value "on" . } .
 } .
 
 {
@@ -26,5 +26,5 @@
 }
 =>
 {
-  [] http:mthd http_m:PUT; http:requestURI ?propcomm ; http:body { ?propcomm  rdf:value saref:Off . } .
+  [] http:mthd http_m:PUT; http:requestURI ?propcomm ; http:body { ?propcomm  rdf:value "on" . } .
 } .

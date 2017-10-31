@@ -109,15 +109,15 @@ propertyBaseGraph.addAll(
 var onTriple = new rdf.Triple(
                       new rdf.NamedNode('#it'),
                       new rdf.NamedNode('http://www.w3.org/1999/02/22-rdf-syntax-ns#value'),
-                      new rdf.NamedNode('https://w3id.org/saref#On'));
+                      new rdf.Literal('on'));
 var offTriple = new rdf.Triple(
                       new rdf.NamedNode('#it'),
                       new rdf.NamedNode('http://www.w3.org/1999/02/22-rdf-syntax-ns#value'),
-                      new rdf.NamedNode('https://w3id.org/saref#Off'));
+                      new rdf.Literal('off'));
 var neutralTriple = new rdf.Triple(
                       new rdf.NamedNode('#it'),
                       new rdf.NamedNode('http://www.w3.org/1999/02/22-rdf-syntax-ns#value'),
-                      new rdf.NamedNode('http://example.org/Neutral'));
+                      new rdf.Literal('neutral'));
 var rdfvalue = new rdf.NamedNode('http://www.w3.org/1999/02/22-rdf-syntax-ns#value');
 var localIt = new rdf.NamedNode('#it');
 var xsddouble = new rdf.NamedNode('http://www.w3.org/2001/XMLSchema#double');
@@ -248,25 +248,25 @@ app.route("/:id").put(function(request, response) {
     return;
   }
 
-  if (statetriple.object.interfaceName === 'NamedNode') {
+  if (statetriple.object.interfaceName === 'Literal') {
     switch (statetriple.object.nominalValue) {
-      case "https://w3id.org/saref#On":
+      case "on":
         statesOfResources[id] = true;
         break;
-      case "https://w3id.org/saref#Off":
+      case "off":
         statesOfResources[id] = false;
         break;
-      case "http://example.org/Neutral":
+      case "neutral":
         statesOfResources[id] = "neutral";
         break;
       default:
         response.status(400);
-        response.send('Please supply a triple with rdf:value as predicate and saref:Off or saref:On as object\n');
+        response.send('Please supply a triple with rdf:value as predicate and off, on, or neutral as object\n');
         return;
       }
   } else {
     response.status(400);
-    response.send('Please supply a triple with rdf:value as predicate and saref:Off or saref:On as object\n');
+    response.send('Please supply a triple with rdf:value as predicate and off, on, or neutral as object\n');
     return;
   }
   response.sendStatus(204);

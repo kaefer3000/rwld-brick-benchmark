@@ -15,19 +15,19 @@
 
   ?light a brick:Lighting ;
     ssn:hasProperty ?proplight .
-  ?proplight rdf:value ex:Off .
+  ?proplight rdf:value "off" .
 
   ?command a brick:Luminance_Command ;
     ssn:hasProperty ?lightcomm .
-  ?lightcomm rdf:value ex:Neutral .
+  ?lightcomm rdf:value "neutral" .
 
   ?sensor a brick:Occupancy_Sensor ;
     ssn:hasProperty ?propsens .
-  ?propsens rdf:value saref:On .
+  ?propsens rdf:value "on" .
 }
 =>
 {
-  [] http:mthd http_m:PUT; http:requestURI ?proplight ; http:body { ?proplight rdf:value saref:On . } . 
+  [] http:mthd http_m:PUT; http:requestURI ?proplight ; http:body { ?proplight rdf:value "on" . } . 
 } .
 
 # If the occupancy sensor does not indicate that the light should be on and the switch is neutral, turn the light off
@@ -36,15 +36,15 @@
 
   ?light a brick:Lighting ;
     ssn:hasProperty ?proplight .
-  ?proplight rdf:value saref:On .
+  ?proplight rdf:value "on" .
 
   ?command a brick:Luminance_Command ;
     ssn:hasProperty ?propcomm .
-  ?propcomm  rdf:value ex:Neutral .
+  ?propcomm  rdf:value "neutral" .
 
   ?sensor a brick:Occupancy_Sensor ;
     ssn:hasProperty ?propsens .
-  ?propsens rdf:value saref:Off .
+  ?propsens rdf:value "off" .
 
   ?lumSensor a brick:LuminanceSensor ;
     ssn:hasProperty ?propLumSens ,
@@ -53,7 +53,7 @@
 }
 =>
 {
-  [] http:mthd http_m:PUT; http:requestURI ?proplight ; http:body { ?proplight rdf:value saref:Off . } . 
+  [] http:mthd http_m:PUT; http:requestURI ?proplight ; http:body { ?proplight rdf:value "off" . } . 
 } .
 
 # Turn the light on if the corresponding switch is on (manual override)
@@ -62,15 +62,15 @@
 
   ?light a brick:Lighting ;
     ssn:hasProperty ?proplight .
-  ?proplight rdf:value saref:Off . 
+  ?proplight rdf:value "off" . 
 
   ?command a brick:Luminance_Command ;
     ssn:hasProperty ?propcomm .
-  ?propcomm  rdf:value saref:On .
+  ?propcomm  rdf:value "on" .
 }
 =>
 {
-  [] http:mthd http_m:PUT; http:requestURI ?proplight ; http:body { ?proplight rdf:value saref:On . } . 
+  [] http:mthd http_m:PUT; http:requestURI ?proplight ; http:body { ?proplight rdf:value "on" . } . 
 } .
 
 # Turn the light off if the corresponding switch is off (manual override)
@@ -79,15 +79,15 @@
 
   ?light a brick:Lighting ;
     ssn:hasProperty ?proplight .
-  ?proplight rdf:value saref:On . 
+  ?proplight rdf:value "on" . 
 
   ?command a brick:Luminance_Command ;
     ssn:hasProperty ?propcomm .
-  ?propcomm  rdf:value saref:Off .
+  ?propcomm  rdf:value "off" .
 }
 =>
 {
-  [] http:mthd http_m:PUT; http:requestURI ?proplight ; http:body { ?proplight rdf:value saref:Off . } . 
+  [] http:mthd http_m:PUT; http:requestURI ?proplight ; http:body { ?proplight rdf:value "off" . } . 
 } .
 
 
@@ -97,15 +97,15 @@
 
   ?light a brick:Lighting ;
     ssn:hasProperty ?proplight .
-  ?proplight rdf:value saref:On .
+  ?proplight rdf:value "on" .
 
   ?command a brick:Luminance_Command ;
     ssn:hasProperty ?propcomm .
-  ?propcomm  rdf:value ex:Neutral .
+  ?propcomm  rdf:value "neutral" .
 
   ?sensor a brick:Occupancy_Sensor ;
     ssn:hasProperty ?propsens .
-  ?propsens rdf:value saref:Off .
+  ?propsens rdf:value "off" .
 
   ?lumSensor a brick:LuminanceSensor ;
     ssn:hasProperty ?propLumSens ,
@@ -114,6 +114,6 @@
 }
 =>
 {
-  [] http:mthd http_m:PUT; http:requestURI ?proplight ; http:body { ?proplight rdf:value saref:On . } . 
+  [] http:mthd http_m:PUT; http:requestURI ?proplight ; http:body { ?proplight rdf:value "on" . } . 
 } .
 
