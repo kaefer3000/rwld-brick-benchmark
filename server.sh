@@ -9,6 +9,8 @@ LDF_DIR="$SCRIPTDIR/linked-data-fu-$LDF_VERSION"
 TMPDIR="$SCRIPTDIR/tmp"
 MOLTMPDIR="$TMPDIR/rdf-molecules"
 
+SPEEDUP="1000"
+
 if [ ! -d "$TMPDIR" ] ; then
   echo "initialise first" >&2
   exit 1
@@ -32,7 +34,7 @@ function startserver {
         echo "time server already running" >&2
         return
       fi
-      MAVEN_OPTS=-Dorg.slf4j.simpleLogger.log.org.eclipse.jetty.server.RequestLog=warn mvn -f "server/timeservlet/pom.xml" -D"jetty.port=8082" jetty:run &
+      MAVEN_OPTS=-Dorg.slf4j.simpleLogger.log.org.eclipse.jetty.server.RequestLog=warn mvn -f "server/timeservlet/pom.xml" -D"jetty.port=8082" -D"timeservlet.speedupfactor=$SPEEDUP" jetty:run &
 
       echo $! > "$TMPDIR"/server-time.pid
 
@@ -44,7 +46,7 @@ function startserver {
         echo "weather server already running" >&2
         return
       fi
-      node server/ld-weather-dummy/index.js -p 8083 &
+      node server/ld-weather-dummy/index.js -p 8083 --speedup "$SPEEDUP" &
 
       echo $! > "$TMPDIR"/server-weather.pid
 
@@ -102,7 +104,7 @@ function startserver {
           "$TMPDIR"/IBM_B3-lights.tsv \
         | awk -F'#' '{ print "-b", $2 }' | xargs echo)
 
-      node server/ld-ssn-properties/index.js $OCCSENS $LUMSENS $SWITCHES $LIGHTS $ALARMS & `# startup the server with the fragment identifiers`
+      node server/ld-ssn-properties/index.js $OCCSENS $LUMSENS $SWITCHES $LIGHTS $ALARMS --speedup "$SPEEDUP" & `# startup the server with the fragment identifiers`
 
       echo $! > "$TMPDIR"/server-property.pid
       ;;
