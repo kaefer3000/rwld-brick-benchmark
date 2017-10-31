@@ -1,0 +1,30 @@
+@prefix building: <http://buildsys.org/ontologies/examples/IBM_B3#> .
+@prefix brick: <http://buildsys.org/ontologies/Brick#> .
+@prefix bframe: <http://buildsys.org/ontologies/BrickFrame#> .
+
+building:fiverooms bframe:hasPart
+building:Room_SOR42_F_8 , building:Room_SOR42_F_9 , building:Room_SOR42_F_21 , building:Room_SOR42_F_13 , building:Room_SOR42_F_16 .
+
+building:tenrooms bframe:hasPart
+building:Room_SOR42_F_6 , building:Room_SOR42_F_7 , building:Room_SOR42_F_8 , building:Room_SOR42_F_9 , building:Room_SOR42_F_21 , building:Room_SOR42_F_13 , building:Room_SOR42_F_16 , building:Room_SOR42_F_14 , building:Room_SOR42_F_15 .
+
+building:twentyrooms bframe:hasPart building:Room_SOR42_F_15 ,
+building:Room_SOR42_F_16 ,
+building:Room_SOR42_F_1 ,
+building:Room_SOR42_F_2 ,
+building:Room_SOR42_F_18 ,
+building:Room_SOR42_F_19 ,
+building:Room_SOR42_F_14 ,
+building:Room_SOR42_F_17 ,
+building:Room_SOR42_F_13 ,
+building:Room_SOR42_F_WC ,
+building:Room_SOR42_F_21 ,
+building:Room_SOR42_F_22 ,
+building:Room_SOR42_F_23 ,
+building:Room_SOR42_F_7 ,
+building:Room_SOR42_F_5 ,
+building:Room_SOR42_F_8 ,
+building:Room_SOR42_F_9 ,
+building:Room_SOR42_F_4 ,
+building:Room_SOR42_F_6 ,
+building:Room_SOR42_F_20 .
