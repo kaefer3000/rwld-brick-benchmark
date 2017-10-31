@@ -64,6 +64,7 @@ building:Room_SOR42_F_20 .
 
 {
   ?thing bframe:isLocatedIn building:Wing_SOR46 .
+  ?thing a brick:Luminance_Command .
   ?thing ssn:hasProperty ?property .
 }
 =>
@@ -74,6 +75,7 @@ building:Room_SOR42_F_20 .
 {
   building:Wing_SOR46 bframe:hasPart ?space .
   ?thing bframe:isLocatedIn ?space .
+  ?thing a brick:Luminance_Command .
   ?thing ssn:hasProperty ?property .
 }
 =>

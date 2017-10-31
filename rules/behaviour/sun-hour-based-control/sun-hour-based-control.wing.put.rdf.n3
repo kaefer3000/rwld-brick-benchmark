@@ -11,6 +11,7 @@
 @prefix dcterms: <http://purl.org/dc/terms/> .
 @prefix ex: <http://example.org/> .
 @prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
+@prefix string: <http://www.w3.org/2000/10/swap/string#> .
 
 { [] http:mthd http_m:GET ; http:requestURI <http://localhost:8082/> . } # Time API
 { [] http:mthd http_m:GET ; http:requestURI <http://localhost:8083/> . } # Weather API
