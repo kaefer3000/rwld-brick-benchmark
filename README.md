@@ -20,9 +20,9 @@ A benchmark for Read-Write Linked Data clients
   * Deployed as Linked Data: RDF molecules from the materialised reasoning of Brick ontology + IBM B3 building description
 * Work loads:
   * Turn on the lights - baseline - baseline
-  * Turn on the lights during working hours (eg. 8 am to 7 pm) - raising energy efficiency - adding conditions
+  * Turn on the lights during working hours (eg. 7 am to 7 pm) - raising energy efficiency - adding conditions
   * Turn on the lights if weather report says it is dark - raising energy efficiency - adding conditions and external API
-  * Turn on the lights if light sensors indicate - raising energy efficiency even more - numerical computations
+  * Turn on the lights if light sensors indicate - raising energy efficiency even more - many numerical computations
   * Turn on the lights if light sensors indicate (with individial thresholds) - adding individual preference for comfort - more numerical computations
   
   * Toggle the lights - adding conditions
