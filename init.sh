@@ -84,6 +84,8 @@ awk -f "scripts/ssn-properties-for-things.awk" "$TMPDIR"/IBM_B3-occupancy-sensor
   | rapper -i turtle -o turtle -I"http://buildsys.org/ontologies/examples/IBM_B3#" - > "$TMPDIR"/"IBM_B3-property-links-for-occupancy-sensors.ttl"
 awk -f "scripts/ssn-properties-for-things.awk" "$TMPDIR"/IBM_B3-luminance-sensors.tsv \
   | rapper -i turtle -o turtle -I"http://buildsys.org/ontologies/examples/IBM_B3#" - > "$TMPDIR"/"IBM_B3-property-links-for-luminance-sensors.ttl"
+awk -f "scripts/comfort-values-for-things.awk" "$TMPDIR"/IBM_B3-luminance-sensors.tsv \
+  | rapper -i turtle -o turtle -I"http://buildsys.org/ontologies/examples/IBM_B3#" - > "$TMPDIR"/"IBM_B3-personal-comfort-values-for-luminance-sensors.ttl"
 awk -f "scripts/ssn-properties-for-things.awk" "$TMPDIR"/IBM_B3-lights.tsv \
   | rapper -i turtle -o turtle -I"http://buildsys.org/ontologies/examples/IBM_B3#" - > "$TMPDIR"/"IBM_B3-property-links-for-lights.ttl"
 
