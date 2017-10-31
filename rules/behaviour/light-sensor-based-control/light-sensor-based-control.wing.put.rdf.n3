@@ -1,0 +1,170 @@
+@prefix building: <http://buildsys.org/ontologies/examples/IBM_B3#> .
+
+@prefix brick: <http://buildsys.org/ontologies/Brick#> .
+@prefix bframe: <http://buildsys.org/ontologies/BrickFrame#> .
+@prefix http: <http://www.w3.org/2011/http#>.
+@prefix http_m: <http://www.w3.org/2011/http-methods#>.
+@prefix rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#> .
+@prefix saref: <https://w3id.org/saref#> .
+@prefix ssn: <http://www.w3.org/ns/ssn/> .
+@prefix time: <http://www.w3.org/2006/time#> .
+@prefix dcterms: <http://purl.org/dc/terms/> .
+@prefix ex: <http://example.org/> .
+@prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
+@prefix string: <http://www.w3.org/2000/10/swap/string#> .
+@prefix math: <http://www.w3.org/2000/10/swap/math#> .
+@prefix qudt: <http://qudt.org/schema/qudt#> .
+
+# Turn off stuff if there is sufficient light
+{
+  ?light bframe:hasPoint ?command , ?sensor.
+
+  ?sensor a brick:Luminance_Sensor ;
+    ssn:hasProperty ?propsens .
+  ?propsens qudt:numericValue ?val .
+
+  ?val math:notLessThan "0.2" .
+
+  ?command a brick:Luminance_Command ;
+    ssn:hasProperty ?propcomm ;
+    bframe:isLocatedIn ?room .
+  ?room bframe:isPartOf building:Wing_SOR46 .
+  ?propcomm  rdf:value "neutral" .
+}
+=>
+{
+  [] http:mthd http_m:PUT; http:requestURI ?propcomm ; http:body { ?propcomm  rdf:value "off" . } .
+} .
+{
+  ?light bframe:hasPoint ?command , ?sensor.
+
+  ?sensor a brick:Luminance_Sensor ;
+    ssn:hasProperty ?propsens .
+  ?propsens qudt:numericValue ?val .
+
+  ?val math:notLessThan "0.2" .
+
+  ?command a brick:Luminance_Command ;
+    ssn:hasProperty ?propcomm ;
+    bframe:isLocatedIn building:Wing_SOR46 .
+  ?propcomm  rdf:value "neutral" .
+}
+=>
+{
+  [] http:mthd http_m:PUT; http:requestURI ?propcomm ; http:body { ?propcomm  rdf:value "off" . } .
+} .
+{
+  ?light bframe:hasPoint ?command , ?sensor.
+
+  ?sensor a brick:Luminance_Sensor ;
+    ssn:hasProperty ?propsens .
+  ?propsens qudt:numericValue ?val .
+
+  ?val math:notLessThan "0.2" .
+
+  ?command a brick:Luminance_Command ;
+    ssn:hasProperty ?propcomm ;
+    bframe:isLocatedIn ?room .
+  ?room bframe:isPartOf building:Wing_SOR46 .
+  ?propcomm  rdf:value "on" .
+}
+=>
+{
+  [] http:mthd http_m:PUT; http:requestURI ?propcomm ; http:body { ?propcomm  rdf:value "off" . } .
+} .
+{
+  ?light bframe:hasPoint ?command , ?sensor.
+
+  ?sensor a brick:Luminance_Sensor ;
+    ssn:hasProperty ?propsens .
+  ?propsens qudt:numericValue ?val .
+
+  ?val math:notLessThan "0.2" .
+
+  ?command a brick:Luminance_Command ;
+    ssn:hasProperty ?propcomm ;
+    bframe:isLocatedIn building:Wing_SOR46 .
+  ?propcomm  rdf:value "on" .
+}
+=>
+{
+  [] http:mthd http_m:PUT; http:requestURI ?propcomm ; http:body { ?propcomm  rdf:value "off" . } .
+} .
+
+
+# Turn on stuff during day time
+{
+  ?light bframe:hasPoint ?command , ?sensor.
+
+  ?sensor a brick:Luminance_Sensor ;
+    ssn:hasProperty ?propsens .
+  ?propsens qudt:numericValue ?val .
+
+  ?val math:lessThan "0.2" .
+
+  ?command a brick:Luminance_Command ;
+    ssn:hasProperty ?propcomm ;
+    bframe:isLocatedIn ?room .
+  ?room bframe:isPartOf building:Wing_SOR46 .
+  ?propcomm rdf:value "neutral" .
+}
+=>
+{
+  [] http:mthd http_m:PUT; http:requestURI ?propcomm ; http:body { ?propcomm  rdf:value "on" . } .
+} .
+{
+  ?light bframe:hasPoint ?command , ?sensor.
+
+  ?sensor a brick:Luminance_Sensor ;
+    ssn:hasProperty ?propsens .
+  ?propsens qudt:numericValue ?val .
+
+  ?val math:lessThan "0.2" .
+
+  ?command a brick:Luminance_Command ;
+    ssn:hasProperty ?propcomm ;
+    bframe:isLocatedIn building:Wing_SOR46 .
+  ?propcomm rdf:value "neutral" .
+}
+=>
+{
+  [] http:mthd http_m:PUT; http:requestURI ?propcomm ; http:body { ?propcomm  rdf:value "on" . } .
+} .
+{
+  ?light bframe:hasPoint ?command , ?sensor.
+
+  ?sensor a brick:Luminance_Sensor ;
+    ssn:hasProperty ?propsens .
+  ?propsens qudt:numericValue ?val .
+
+  ?val math:lessThan "0.2" .
+
+  ?command a brick:Luminance_Command ;
+    ssn:hasProperty ?propcomm ;
+    bframe:isLocatedIn ?room .
+  ?room bframe:isPartOf building:Wing_SOR46 .
+  ?propcomm rdf:value "off" .
+}
+=>
+{
+  [] http:mthd http_m:PUT; http:requestURI ?propcomm ; http:body { ?propcomm  rdf:value "on" . } .
+} .
+{
+  ?light bframe:hasPoint ?command , ?sensor.
+
+  ?sensor a brick:Luminance_Sensor ;
+    ssn:hasProperty ?propsens .
+  ?propsens qudt:numericValue ?val .
+
+  ?val math:lessThan "0.2" .
+
+  ?command a brick:Luminance_Command ;
+    ssn:hasProperty ?propcomm ;
+    bframe:isLocatedIn building:Wing_SOR46 .
+  ?propcomm rdf:value "off" .
+}
+=>
+{
+  [] http:mthd http_m:PUT; http:requestURI ?propcomm ; http:body { ?propcomm  rdf:value "on" . } .
+} .
+
