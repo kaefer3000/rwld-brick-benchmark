@@ -73,7 +73,7 @@ function startserver {
         curl -f -X PUT localhost:8081/ldbbc/ -Hcontent-type:text/turtle -T $file
       done
 
-      for file in $(find $TMPDIR -type f -name 'IBM_B3-property-links-for-*ttl') ; do
+      for file in $(find $TMPDIR -type f -name 'IBM_B3-p*ttl') ; do
         curl -f -X PUT localhost:8081/ldbbc/ -Hcontent-type:text/turtle -T $file
       done
 
