@@ -1,0 +1,160 @@
+@prefix building: <http://localhost:8081/ldbbc/> .
+
+@prefix brick: <http://buildsys.org/ontologies/Brick#> .
+@prefix bframe: <http://buildsys.org/ontologies/BrickFrame#> .
+@prefix http: <http://www.w3.org/2011/http#>.
+@prefix http_m: <http://www.w3.org/2011/http-methods#>.
+@prefix rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#> .
+@prefix saref: <https://w3id.org/saref#> .
+@prefix ssn: <http://www.w3.org/ns/ssn/> .
+@prefix time: <http://www.w3.org/2006/time#> .
+@prefix dcterms: <http://purl.org/dc/terms/> .
+@prefix ex: <http://example.org/> .
+@prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
+
+{ [] http:mthd http_m:GET ; http:requestURI <http://localhost:8082/> . } # Time API
+{ [] http:mthd http_m:GET ; http:requestURI <http://localhost:8083/> . } # Weather API
+
+{
+  <http://localhost:8082/> dcterms:created ?currentTime .
+  ?x <http://www.example.org/hasSunshineEvent> ?ev .
+  ?ev <http://schema.org/startEvent> ?sunrise ;
+    <http://schema.org/endEvent> ?sunset .
+
+  ?sunrise string:notGreaterThan ?currentTime .
+  ?sunset string:notLessThan ?currentTime .
+}
+=>
+{
+  <http://localhost:8082/> a ex:DayTime .
+} .
+{
+  <http://localhost:8082/> dcterms:created ?currentTime .
+  ?x <http://www.example.org/hasSunshineEvent> ?ev .
+  ?ev <http://schema.org/startEvent> ?sunrise ;
+    <http://schema.org/endEvent> ?sunset .
+
+  ?sunset string:lessThan ?currentTime .
+}
+=>
+{
+  <http://localhost:8082/> a ex:NightTime .
+} .
+{
+  <http://localhost:8082/> dcterms:created ?currentTime .
+  ?x <http://www.example.org/hasSunshineEvent> ?ev .
+  ?ev <http://schema.org/startEvent> ?sunrise ;
+    <http://schema.org/endEvent> ?sunset .
+
+  ?sunrise string:greaterThan ?currentTime .
+}
+=>
+{
+  <http://localhost:8082/> a ex:NightTime .
+} .
+
+# Turn off stuff during night time
+{
+  <http://localhost:8082/> a ex:NightTime .
+
+  ?command a brick:Luminance_Command ;
+    ssn:hasProperty ?propcomm ;
+    bframe:isLocatedIn ?room .
+  ?room bframe:isPartOf building:Wing_SOR46 .
+  ?propcomm  rdf:value "neutral" .
+}
+=>
+{
+  [] http:mthd http_m:PUT; http:requestURI ?propcomm ; http:body { ?propcomm  rdf:value "off" . } .
+} .
+{
+  <http://localhost:8082/> a ex:NightTime .
+
+  ?command a brick:Luminance_Command ;
+    ssn:hasProperty ?propcomm ;
+    bframe:isLocatedIn building:Wing_SOR46 .
+  ?propcomm  rdf:value "neutral" .
+}
+=>
+{
+  [] http:mthd http_m:PUT; http:requestURI ?propcomm ; http:body { ?propcomm  rdf:value "off" . } .
+} .
+{
+  <http://localhost:8082/> a ex:NightTime .
+
+  ?command a brick:Luminance_Command ;
+    ssn:hasProperty ?propcomm ;
+    bframe:isLocatedIn ?room .
+  ?room bframe:isPartOf building:Wing_SOR46 .
+  ?propcomm  rdf:value "on" .
+}
+=>
+{
+  [] http:mthd http_m:PUT; http:requestURI ?propcomm ; http:body { ?propcomm  rdf:value "off" . } .
+} .
+{
+  <http://localhost:8082/> a ex:NightTime .
+
+  ?command a brick:Luminance_Command ;
+    ssn:hasProperty ?propcomm ;
+    bframe:isLocatedIn building:Wing_SOR46 .
+  ?propcomm  rdf:value "on" .
+}
+=>
+{
+  [] http:mthd http_m:PUT; http:requestURI ?propcomm ; http:body { ?propcomm  rdf:value "off" . } .
+} .
+
+
+# Turn on stuff during day time
+{
+  <http://localhost:8082/> a ex:DayTime .
+
+  ?command a brick:Luminance_Command ;
+    ssn:hasProperty ?propcomm ;
+    bframe:isLocatedIn ?room .
+  ?room bframe:isPartOf building:Wing_SOR46 .
+  ?propcomm rdf:value "neutral" .
+}
+=>
+{
+  [] http:mthd http_m:PUT; http:requestURI ?propcomm ; http:body { ?propcomm  rdf:value "on" . } .
+} .
+{
+  <http://localhost:8082/> a ex:DayTime .
+
+  ?command a brick:Luminance_Command ;
+    ssn:hasProperty ?propcomm ;
+    bframe:isLocatedIn building:Wing_SOR46 .
+  ?propcomm rdf:value "neutral" .
+}
+=>
+{
+  [] http:mthd http_m:PUT; http:requestURI ?propcomm ; http:body { ?propcomm  rdf:value "on" . } .
+} .
+{
+  <http://localhost:8082/> a ex:DayTime .
+
+  ?command a brick:Luminance_Command ;
+    ssn:hasProperty ?propcomm ;
+    bframe:isLocatedIn ?room .
+  ?room bframe:isPartOf building:Wing_SOR46 .
+  ?propcomm rdf:value "off" .
+}
+=>
+{
+  [] http:mthd http_m:PUT; http:requestURI ?propcomm ; http:body { ?propcomm  rdf:value "on" . } .
+} .
+{
+  <http://localhost:8082/> a ex:DayTime .
+
+  ?command a brick:Luminance_Command ;
+    ssn:hasProperty ?propcomm ;
+    bframe:isLocatedIn building:Wing_SOR46 .
+  ?propcomm rdf:value "off" .
+}
+=>
+{
+  [] http:mthd http_m:PUT; http:requestURI ?propcomm ; http:body { ?propcomm  rdf:value "on" . } .
+} .
+
