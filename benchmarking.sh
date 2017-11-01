@@ -2,8 +2,8 @@
 
 set -e
 
-ITERATIONS=20
-SAFETYFACTOR=2
+ITERATIONS=1
+SAFETYFACTOR=1
 
 echo "=================================BRACK========================================="
 echo "======= Benchmarking Read-write user Agents and Clients for linKed data  ======"
@@ -43,21 +43,21 @@ done
 #-p rules/behaviour/$2/$2.x.get.rdf.n3 -p rules/behaviour/$2/$2.x.put.rdf.n3 \
 #-n 2>&1 ) | tee -a ldf.out | grep lapsed | head -$ITERATIONS | awk '{sub(/\./,"",$4); print $4}' | sort | ./scripts/median.awk
 
-echo -ne "Reading the entire building from network. Median time [ms]:\t\t"
-(timeout $((500 * $SAFETYFACTOR * $ITERATIONS / 1000)) \
+echo -ne "Reading the entire building from network. Time [ms]:\t\t"
+(timeout $((110 * 500 * $SAFETYFACTOR * $ITERATIONS / 1000)) \
 ./linked-data-fu-0.9.12/bin/ldfu.sh -p rules/reasoning/hasPartIsTransitive.n3 -p tmp/brick-inverse-properties.n3 \
 -i "http://localhost:8081/ldbbc/IBM_B3.ttl" -i "http://localhost:8081/ldbbc/IBM_B3-property-links-for-lights.ttl" -i "http://localhost:8081/ldbbc/IBM_B3-property-links-for-occupancy-sensors.ttl" -i "http://localhost:8081/ldbbc/IBM_B3-property-links-for-luminance-commands.ttl" -i "http://localhost:8081/ldbbc/IBM_B3-property-links-for-luminance-sensors.ttl" -i "http://localhost:8081/ldbbc/IBM_B3-property-links-for-luminance-alarms.ttl" -i "http://localhost:8081/ldbbc/IBM_B3-personal-comfort-values-for-luminance-sensors.ttl" \
 -p rules/behaviour/$2/$2.x.get.rdf.n3 -p rules/behaviour/$2/$2.x.put.rdf.n3 \
--n 2>&1 ) | tee -a ldf.out | grep lapsed | head -$ITERATIONS | awk '{sub(/\./,"",$4); print $4}' | sort | ./scripts/median.awk
+-n 2>&1 ) | tee -a ldf.out | grep lapsed | awk '{sub(/\./,"",$4); print $4}' | sort | ./scripts/median-stddev-mean.awk
 
 # Resetting the property server
 curl -qf -X DELETE http://localhost:8080/ 2> /dev/null > /dev/null
 
-echo -ne "Reading the relevant Linked Data from the network. Median time [ms]:\t"
-(timeout $((1300 * $SAFETYFACTOR * $ITERATIONS / 1000)) \
+echo -ne "Reading the relevant Linked Data from the network. Time [ms]:\t"
+(timeout $((43 * 1300 * $SAFETYFACTOR * $ITERATIONS / 1000)) \
 ./linked-data-fu-0.9.12/bin/ldfu.sh -p rules/reasoning/hasPartIsTransitive.n3 -p tmp/brick-inverse-properties.n3 \
 -p rules/behaviour/$2/$2.x.get.ld.n3 -p rules/behaviour/$2/$2.x.put.ld.n3 \
--n 2>&1 ) | tee -a ldf.out | grep lapsed | head -$ITERATIONS | awk '{sub(/\./,"",$4); print $4}' | sort | ./scripts/median.awk
+-n 2>&1 ) | tee -a ldf.out | grep lapsed | awk '{sub(/\./,"",$4); print $4}' | sort | ./scripts/median-stddev-mean.awk
 
 #echo -ne "Rules without variables. Median time [ms]:\t"
 #(timeout $((600 * $SAFETYFACTOR * $ITERATIONS / 1000)) \
@@ -66,7 +66,7 @@ echo -ne "Reading the relevant Linked Data from the network. Median time [ms]:\t
 
 }
 
-for behaviour in "individual-light-sensor-based-control" "clock-based-control" "sun-hour-based-control" "light-sensor-based-control" "turn-lightswitches-on" ; do
+for behaviour in "turn-lightswitches-on" "clock-based-control" "sun-hour-based-control" "light-sensor-based-control" "individual-light-sensor-based-control" ; do
   echo
   echo "============== behaviour: $behaviour =============="
   for place in Room_SOR42_G_19 fiverooms tenrooms twentyrooms Floor_FirstFloor Wing_SOR46 Building_B3 ; do

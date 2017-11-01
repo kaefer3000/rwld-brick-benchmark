@@ -9,7 +9,7 @@ LDF_DIR="$SCRIPTDIR/linked-data-fu-$LDF_VERSION"
 TMPDIR="$SCRIPTDIR/tmp"
 MOLTMPDIR="$TMPDIR/rdf-molecules"
 
-SPEEDUP="1000"
+SPEEDUP="613200"
 
 if [ ! -d "$TMPDIR" ] ; then
   echo "initialise first" >&2
