@@ -9,6 +9,10 @@ A benchmark for Read-Write Linked Data clients
 * AWK
 * node.js
 
+## Obtain
+You have to tell git to also fetch the submodules
+`git clone https://github.com/kaefer3000/rwld-brick-benchmark --recursive`
+
 ## Usage
 * `./init.sh` To initialise data
 * `./server.sh start all` To start all servers
