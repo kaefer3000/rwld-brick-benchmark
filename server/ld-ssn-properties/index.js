@@ -550,7 +550,7 @@ isPresent = function(roomid, hour, minute) {
         return true;
       break;
     case 3:
-      if ((hour === 9 && minute > 30) || (hour === 10 && minute < 30) || (hour === 12 && minute < 30) || hour === 13 || (hour === 14 && minute < 30) || (hour === 17 && (minute > 30 || minute < 35))
+      if ((hour === 9 && minute > 30) || (hour === 10 && minute < 30) || (hour === 12 && minute < 30) || hour === 13 || (hour === 14 && minute < 30) || (hour === 17 && (minute > 30 || minute < 35)))
         return false;
       else
         return true;
