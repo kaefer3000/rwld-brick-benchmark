@@ -13,12 +13,12 @@ A benchmark for Read-Write Linked Data clients
 You have to tell git to also fetch the submodules
 `git clone https://github.com/kaefer3000/rwld-brick-benchmark --recursive`
 
-## Usage
+## Usage for rule-based automation benchmark
 * `./init.sh` To initialise data
-* `./server.sh start all` To start all servers
+* `./server.sh start all` To start all servers (requires free ports between `40100` and `40399`)
 * `./benchmark.sh` To run the benchmarking script
 
-## Evaluation directions
+### Evaluation directions
 * Data access:
   * All data in one file on an HTTP server
   * Deployed as Linked Data: RDF molecules from the materialised reasoning of Brick ontology + IBM B3 building description
@@ -30,6 +30,13 @@ You have to tell git to also fetch the submodules
   * Turn on the lights if light sensors indicate (with individial thresholds) - adding individual preference for comfort - more numerical computations
   
   * Toggle the lights - adding conditions
+
+## Usage for workflow-based automation benchmark
+* `./init.sh -n <buildingcount> -h <hostname>` To initialise data
+* `./server.sh -n <buildingcount> -s <speedupfactor> start all` To start all servers
+Supply the number of buildings to be simulated, default: `1`.
+If the client does not run on localhost, supply the hostname, default: `localhost`.
+The speedup factor sets the factor between wall clock time and simulated time, default: `613200`.
 
 ## Misc
 * If the a switch serves as manual override, it should have a neutral state
