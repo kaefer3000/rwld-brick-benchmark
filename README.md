@@ -8,6 +8,7 @@ A benchmark for Read-Write Linked Data clients
 * CURL
 * AWK
 * node.js
+* Free ports between `40100` and `40399`
 
 ## Obtain
 You have to tell git to also fetch the submodules
@@ -15,7 +16,7 @@ You have to tell git to also fetch the submodules
 
 ## Usage for rule-based automation benchmark
 * `./init.sh` To initialise data
-* `./server.sh start all` To start all servers (requires free ports between `40100` and `40399`)
+* `./server.sh start all` To start all servers
 * `./benchmark.sh` To run the benchmarking script
 
 ### Evaluation directions
