@@ -156,7 +156,7 @@ app.route("/:id").get(function(request, response) {
   var state;
   switch (typesOfResources[id]) {
     case "dynamic":
-      if ("o" in dictArgv && id in dictArgv["o"])
+      if ("o" in dictArgv && id in dictArgv["o"]) {
         // occupancy sensor:
         // periodically changing with a resource-specific offset. The divisor can be used to control the speed of changes.
         state = Math.sin(id.hashCode() + new Date()/1000) < 0; 
@@ -165,7 +165,8 @@ app.route("/:id").get(function(request, response) {
           now = new Date(startupTime.getTime() + speedupFactor * diff);
         }
         state = isPresent(id.hashCode(), now.getHours(), now.getMinutes());
-      else if ("l" in dictArgv && id in dictArgv["l"]) {
+     } 
+     else if ("l" in dictArgv && id in dictArgv["l"]) {
         // luminance sensor:
         // periodically changing with a resource-specific offset. The divisor can be used to control the speed of changes.
         state = (Math.sin(id.hashCode() + new Date()/10000) + 1)/2;
