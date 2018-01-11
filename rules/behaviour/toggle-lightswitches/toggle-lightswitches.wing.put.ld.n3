@@ -1,4 +1,4 @@
-@prefix building: <http://localhost:8081/ldbbc/> .
+@prefix building: <http://localhost:40200/ldbbc/> .
 
 @prefix brick: <http://buildsys.org/ontologies/Brick#> .
 @prefix bframe: <http://buildsys.org/ontologies/BrickFrame#> .

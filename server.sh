@@ -59,24 +59,24 @@ function startserver {
         return
       fi
 
-      MAVEN_OPTS=-Dorg.slf4j.simpleLogger.log.org.eclipse.jetty.server.RequestLog=warn mvn -f "server/ldbbc/pom.xml" -D"jetty.port=8081" jetty:run &
+      MAVEN_OPTS=-Dorg.slf4j.simpleLogger.log.org.eclipse.jetty.server.RequestLog=warn mvn -f "server/ldbbc/pom.xml" -D"jetty.port=40200" jetty:run &
 
       echo $! > "$TMPDIR"/server-building.pid
 
       sleep 10
 
       for file in $(find $MOLTMPDIR/ -type f) ; do
-        curl -f -X PUT localhost:8081/ldbbc/ -Hcontent-type:text/turtle -T $file
+        curl -f -X PUT localhost:40200/ldbbc/ -Hcontent-type:text/turtle -T $file
       done
 
-      curl -f -X PUT localhost:8081/ldbbc/ -Hcontent-type:text/turtle -T $SCRIPTDIR/brick/GroundTruth/building_instances/IBM_B3.ttl
+      curl -f -X PUT localhost:40200/ldbbc/ -Hcontent-type:text/turtle -T $SCRIPTDIR/brick/GroundTruth/building_instances/IBM_B3.ttl
 
       for file in $(find $SCRIPTDIR/brick/GroundTruth/Brick/ -name 'B*ttl' -type f) ; do
-        curl -f -X PUT localhost:8081/ldbbc/ -Hcontent-type:text/turtle -T $file
+        curl -f -X PUT localhost:40200/ldbbc/ -Hcontent-type:text/turtle -T $file
       done
 
       for file in $(find $TMPDIR -type f -name 'IBM_B3-p*ttl') ; do
-        curl -f -X PUT localhost:8081/ldbbc/ -Hcontent-type:text/turtle -T $file
+        curl -f -X PUT localhost:40200/ldbbc/ -Hcontent-type:text/turtle -T $file
       done
 
       ;;
