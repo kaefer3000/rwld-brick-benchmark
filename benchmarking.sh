@@ -9,7 +9,7 @@ echo "=================================BRACK====================================
 echo "======= Benchmarking Read-write user Agents and Clients for linKed data  ======"
 echo "=================================BRACK========================================="
 
-if [ $(curl -qf http://localhost:40200/ldbbc/ 2> /dev/null > /dev/null ; echo $?) -ne "0" ] || [ $(curl -qf http://localhost:8080/ 2> /dev/null > /dev/null ; echo $?) -ne "0" ] ; then
+if [ $(curl -qf http://localhost:40200/ldbbc/ 2> /dev/null > /dev/null ; echo $?) -ne "0" ] || [ $(curl -qf http://localhost:40300/ 2> /dev/null > /dev/null ; echo $?) -ne "0" ] ; then
   echo "Please start the servers first, ie. run \"./server.sh start all\" to start all"
   exit 1
 fi
@@ -21,7 +21,7 @@ rm -f ldf.out
 function tlo {
 
 # Resetting the property server
-curl -qf -X DELETE http://localhost:8080/ 2> /dev/null > /dev/null
+curl -qf -X DELETE http://localhost:40300/ 2> /dev/null > /dev/null
 
 for file in $(find rules/behaviour/ -name $2".wing.*n3"); do
   NEWNAME=$(echo $file | sed 's/wing/x/')
@@ -51,7 +51,7 @@ echo -ne "Reading the entire building from network. Time [ms]:\t\t"
 -n 2>&1 ) | tee -a ldf.out | grep lapsed | awk '{sub(/\./,"",$4); print $4}' | sort | ./scripts/median-stddev-mean.awk
 
 # Resetting the property server
-curl -qf -X DELETE http://localhost:8080/ 2> /dev/null > /dev/null
+curl -qf -X DELETE http://localhost:40300/ 2> /dev/null > /dev/null
 
 echo -ne "Reading the relevant Linked Data from the network. Time [ms]:\t"
 (timeout $((43 * 1300 * $SAFETYFACTOR * $ITERATIONS / 1000)) \

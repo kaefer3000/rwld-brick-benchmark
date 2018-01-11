@@ -8,7 +8,7 @@
 BEGIN {
   FS="#" ;
   OFS=" " ;
-  if (base == "") { base="http://localhost:8080/" ; }
+  if (base == "") { base="http://localhost:40300/" ; }
   print "@prefix brack: <http://rwld-brick-benchmark.github.io/vocab#> ." ;
   print "@base <" base "> ." ;
 }

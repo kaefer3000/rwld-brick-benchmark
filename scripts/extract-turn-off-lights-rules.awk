@@ -4,7 +4,7 @@
 # The base URI for the URIs on the property server can be overriden on cli using -v base=<URI>
 
 BEGIN {
-  if (base == "") { base="http://localhost:8080/" ; }
+  if (base == "") { base="http://localhost:40300/" ; }
   print "@prefix http: <http://www.w3.org/2011/http#> ." ;
   print "@prefix http_m: <http://www.w3.org/2011/http-methods#> ." ;
   print "@prefix rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#> .";
