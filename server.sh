@@ -104,7 +104,7 @@ function startserver {
           "$TMPDIR"/IBM_B3-lights.tsv \
         | awk -F'#' '{ print "-b", $2 }' | xargs echo)
 
-      node server/ld-ssn-properties/index.js $OCCSENS $LUMSENS $SWITCHES $LIGHTS $ALARMS --speedup "$SPEEDUP" & `# startup the server with the fragment identifiers`
+      node server/ld-ssn-properties/index.js $OCCSENS $LUMSENS $SWITCHES $LIGHTS $ALARMS -p 40300 --speedup "$SPEEDUP" & `# startup the server with the fragment identifiers`
 
       echo $! > "$TMPDIR"/server-property.pid
       ;;
