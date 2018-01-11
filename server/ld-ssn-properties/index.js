@@ -160,6 +160,11 @@ app.route("/:id").get(function(request, response) {
         // occupancy sensor:
         // periodically changing with a resource-specific offset. The divisor can be used to control the speed of changes.
         state = Math.sin(id.hashCode() + new Date()/1000) < 0; 
+        if (speedupFactor < 1 || speedupFactor > 1) {
+        var diff = now - startupTime;
+          now = new Date(startupTime.getTime() + speedupFactor * diff);
+        }
+        state = isPresent(id.hashCode(), now.getHours(), now.getMinutes());
       else if ("l" in dictArgv && id in dictArgv["l"]) {
         // luminance sensor:
         // periodically changing with a resource-specific offset. The divisor can be used to control the speed of changes.
@@ -517,4 +522,52 @@ adjustIntoNonNegativeBelow = function(limit, number) {
     return number;
 };
 
+
+isPresent = function(roomid, hour, minute) {
+
+  // Implementing Figures 13+14 of Chang and Hong: "Statistical analysis and modeling of occupancy patterns in open-plan offices using measured lighting-switch data", In: Building Simulation 6:1 (2013)
+  if (hour < 8 || hour > 18)
+    return false;
+
+  switch (roomid % 6) {
+    case 0:
+      if (hour === 9 && minute > 45)
+        return false;
+      else
+        return true;
+      break;
+    case 1:
+      if (hour === 10 || (hour === 14 && minute < 10)
+        return false;
+      else
+        return true;
+      break;
+    case 2:
+      if (hour === 15 && minute < 15)
+        return false;
+      else
+        return true;
+      break;
+    case 3:
+      if ((hour === 9 && minute > 30) || (hour === 10 && minute < 30) || (hour === 12 && minute < 30) || hour === 13 || (hour === 14 && minute < 30) || (hour === 17 && (minute > 30 || minute < 35))
+        return false;
+      else
+        return true;
+      break;
+    case 4:
+      if ((hour === 10 && minute < 5)  || (hour === 11 && minute > 30) || (hour === 17 && minute < 30))
+        return false;
+      else
+        return true;
+      break;
+    case 5:
+      if ((hour === 11 && minute < 30) || (hour === 12 && minute < 30) || (hour === 16 && minute < 10) || (hour === 17 && minute < 10))
+        return false;
+      else
+        return true;
+      break;
+    default:
+      console.log("modulo operator gone wild");
+  }
+};
 
