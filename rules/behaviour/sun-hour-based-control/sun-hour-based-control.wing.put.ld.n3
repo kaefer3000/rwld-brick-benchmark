@@ -14,7 +14,7 @@
 @prefix string: <http://www.w3.org/2000/10/swap/string#> .
 
 { [] http:mthd http_m:GET ; http:requestURI <http://localhost:40102/> . } # Time API
-{ [] http:mthd http_m:GET ; http:requestURI <http://localhost:8083/> . } # Weather API
+{ [] http:mthd http_m:GET ; http:requestURI <http://localhost:40103/> . } # Weather API
 
 {
   <http://localhost:40102/> dcterms:created ?currentTime .

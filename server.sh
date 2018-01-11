@@ -46,7 +46,7 @@ function startserver {
         echo "weather server already running" >&2
         return
       fi
-      node server/ld-weather-dummy/index.js -p 8083 --speedup "$SPEEDUP" &
+      node server/ld-weather-dummy/index.js -p 40103 --speedup "$SPEEDUP" &
 
       echo $! > "$TMPDIR"/server-weather.pid
 
