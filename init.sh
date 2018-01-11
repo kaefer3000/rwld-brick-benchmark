@@ -3,12 +3,32 @@
 # fail the script if a command fails
 set -e
 
+OPTIND=1 # reset getopts
+
 SCRIPTDIR=$(dirname "$(readlink -f "$0")")
 LDF_VERSION="0.9.12"
 LDF_DIR="$SCRIPTDIR/linked-data-fu-$LDF_VERSION"
 
 TMPDIR="$SCRIPTDIR/tmp"
 MOLTMPDIR="$TMPDIR/rdf-molecules"
+
+BUILDINGCOUNT=1
+HOSTNAME="localhost"
+
+while getopts "?n:h:" opt; do
+  case "$opt" in
+    n)
+      BUILDINGCOUNT="$OPTARG"
+    ;;
+    h)
+      HOSTNAME="$OPTARG"
+    ;;
+    \?)
+      echo "$0 [ -? -n <buildingcount> -h <hostname> ]" >&2
+      exit
+    ;;
+  esac
+done
 
 [ -d "$TMPDIR" ] && echo "temp folder $TMPDIR exists, overwriting..." >&2 && rm -rf "$TMPDIR" 
 
@@ -76,22 +96,30 @@ $LDF_DIR/bin/ldfu.sh \
 ## Creating ssn:hasProperty links
 ##
 
-awk -f "scripts/ssn-properties-for-things.awk" "$TMPDIR"/IBM_B3-luminance-commands.tsv \
-  | rapper -i turtle -o turtle -I"http://buildsys.org/ontologies/examples/IBM_B3#" - > "$TMPDIR"/"IBM_B3-property-links-for-luminance-commands.ttl"
-awk -f "scripts/ssn-properties-for-things.awk" "$TMPDIR"/IBM_B3-luminance-alarms.tsv \
-  | rapper -i turtle -o turtle -I"http://buildsys.org/ontologies/examples/IBM_B3#" - > "$TMPDIR"/"IBM_B3-property-links-for-luminance-alarms.ttl"
-awk -f "scripts/ssn-properties-for-things.awk" "$TMPDIR"/IBM_B3-occupancy-sensors.tsv \
-  | rapper -i turtle -o turtle -I"http://buildsys.org/ontologies/examples/IBM_B3#" - > "$TMPDIR"/"IBM_B3-property-links-for-occupancy-sensors.ttl"
-awk -f "scripts/ssn-properties-for-things.awk" "$TMPDIR"/IBM_B3-luminance-sensors.tsv \
-  | rapper -i turtle -o turtle -I"http://buildsys.org/ontologies/examples/IBM_B3#" - > "$TMPDIR"/"IBM_B3-property-links-for-luminance-sensors.ttl"
-awk -f "scripts/comfort-values-for-things.awk" "$TMPDIR"/IBM_B3-luminance-sensors.tsv \
-  | rapper -i turtle -o turtle -I"http://buildsys.org/ontologies/examples/IBM_B3#" - > "$TMPDIR"/"IBM_B3-personal-comfort-values-for-luminance-sensors.ttl"
-awk -f "scripts/ssn-properties-for-things.awk" "$TMPDIR"/IBM_B3-lights.tsv \
-  | rapper -i turtle -o turtle -I"http://buildsys.org/ontologies/examples/IBM_B3#" - > "$TMPDIR"/"IBM_B3-property-links-for-lights.ttl"
+for ((cnt=0;cnt<$BUILDINGCOUNT;cnt++)); do
 
-for file in $(find $TMPDIR -type f -name 'IBM_B3-property-links-for-*ttl') ; do
-  NEWNAME=$(echo $file | sed 's/\.ttl$/.nt/')
-  rapper -i turtle -o ntriples $file > $NEWNAME
+  if [ ! -d "$TMPDIR"/"$cnt" ] ; then
+    mkdir "$TMPDIR"/"$cnt"
+  fi
+
+  awk -f "scripts/ssn-properties-for-things.awk" -v base="http://$HOSTNAME:$( expr 40300 + $cnt )/" "$TMPDIR"/IBM_B3-luminance-commands.tsv \
+    | rapper -i turtle -o turtle -I"http://buildsys.org/ontologies/examples/IBM_B3#" - > "$TMPDIR"/"$cnt"/"IBM_B3-property-links-for-luminance-commands.ttl"
+  awk -f "scripts/ssn-properties-for-things.awk" -v base="http://$HOSTNAME:$( expr 40300 + $cnt )/" "$TMPDIR"/IBM_B3-luminance-alarms.tsv \
+    | rapper -i turtle -o turtle -I"http://buildsys.org/ontologies/examples/IBM_B3#" - > "$TMPDIR"/"$cnt"/"IBM_B3-property-links-for-luminance-alarms.ttl"
+  awk -f "scripts/ssn-properties-for-things.awk" -v base="http://$HOSTNAME:$( expr 40300 + $cnt )/" "$TMPDIR"/IBM_B3-occupancy-sensors.tsv \
+    | rapper -i turtle -o turtle -I"http://buildsys.org/ontologies/examples/IBM_B3#" - > "$TMPDIR"/"$cnt"/"IBM_B3-property-links-for-occupancy-sensors.ttl"
+  awk -f "scripts/ssn-properties-for-things.awk" -v base="http://$HOSTNAME:$( expr 40300 + $cnt )/" "$TMPDIR"/IBM_B3-luminance-sensors.tsv \
+    | rapper -i turtle -o turtle -I"http://buildsys.org/ontologies/examples/IBM_B3#" - > "$TMPDIR"/"$cnt"/"IBM_B3-property-links-for-luminance-sensors.ttl"
+  awk -f "scripts/comfort-values-for-things.awk" -v base="http://$HOSTNAME:$( expr 40300 + $cnt )/" "$TMPDIR"/IBM_B3-luminance-sensors.tsv \
+    | rapper -i turtle -o turtle -I"http://buildsys.org/ontologies/examples/IBM_B3#" - > "$TMPDIR"/"$cnt"/"IBM_B3-personal-comfort-values-for-luminance-sensors.ttl"
+  awk -f "scripts/ssn-properties-for-things.awk" -v base="http://$HOSTNAME:$( expr 40300 + $cnt )/" "$TMPDIR"/IBM_B3-lights.tsv \
+    | rapper -i turtle -o turtle -I"http://buildsys.org/ontologies/examples/IBM_B3#" - > "$TMPDIR"/"$cnt"/"IBM_B3-property-links-for-lights.ttl"
+
+  for file in $(find "$TMPDIR"/"$cnt"/ -type f -name 'IBM_B3-property-links-for-*ttl') ; do
+    NEWNAME=$(echo $file | sed 's/\.ttl$/.nt/')
+    rapper -i turtle -o ntriples $file > $NEWNAME
+  done
+
 done
 
 ##
@@ -100,12 +128,18 @@ done
 
 mkdir $MOLTMPDIR
 
-cat "$TMPDIR"/IBM_B3-p* brick/GroundTruth/building_instances/IBM_B3.ttl \
-  | rapper -i turtle -o ntriples -I"http://ex.org" - `# converting to N-Triples` \
-  | sed -E 's/\<\S*IBM_B3#(\S*)>/\1>/g'              `# making the building URIs relative` \
-  | tee \
-    >( awk -v directory="$MOLTMPDIR" 'BEGIN {FS=" "} $(NF-1) ~ /^<[^hH]\S+>$/ { print >> directory"/"substr($(NF-1),2,length($(NF-1))-2) ; fflush() }' ) `# emit triples where the object  is from the building` \
-  |    awk -v directory="$MOLTMPDIR" 'BEGIN {FS=" "} $1      ~ /^<[^hH]\S+>$/ { print >> directory"/"substr($1     ,2,length($1     )-2) ; fflush() }'   `# emit triples where the subject is from the building`
+for ((cnt=0;cnt<$BUILDINGCOUNT;cnt++)); do
+
+  mkdir $MOLTMPDIR/$cnt
+
+  cat "$TMPDIR"/$cnt/IBM_B3-p* brick/GroundTruth/building_instances/IBM_B3.ttl \
+    | rapper -i turtle -o ntriples -I"http://ex.org" - `# converting to N-Triples` \
+    | sed -E 's/\<\S*IBM_B3#(\S*)>/\1>/g'              `# making the building URIs relative` \
+    | tee \
+      >( awk -v directory="$MOLTMPDIR"/"$cnt" 'BEGIN {FS=" "} $(NF-1) ~ /^<[^hH]\S+>$/ { print >> directory"/"substr($(NF-1),2,length($(NF-1))-2) ; fflush() }' ) `# emit triples where the object  is from the building` \
+    |    awk -v directory="$MOLTMPDIR"/"$cnt" 'BEGIN {FS=" "} $1      ~ /^<[^hH]\S+>$/ { print >> directory"/"substr($1     ,2,length($1     )-2) ; fflush() }'   `# emit triples where the subject is from the building`
+
+done
 
 ##
 ## Extracting rules for inverse properties.

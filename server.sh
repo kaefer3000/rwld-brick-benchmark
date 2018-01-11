@@ -2,6 +2,8 @@
 
 set -e
 
+OPTIND=1 # reset getopts
+
 SCRIPTDIR=$(dirname "$(readlink -f "$0")")
 LDF_VERSION="0.9.12"
 LDF_DIR="$SCRIPTDIR/linked-data-fu-$LDF_VERSION"
@@ -10,6 +12,8 @@ TMPDIR="$SCRIPTDIR/tmp"
 MOLTMPDIR="$TMPDIR/rdf-molecules"
 
 SPEEDUP="613200"
+
+BUILDINGCOUNT="1"
 
 if [ ! -d "$TMPDIR" ] ; then
   echo "initialise first" >&2
@@ -22,8 +26,8 @@ function startserver {
 
     all)
       echo "starting all" >&2
-      startserver property
       startserver building
+      startserver property
       startserver time
       startserver weather
       return
@@ -54,59 +58,74 @@ function startserver {
       ;;
 
     building)
-      if [ -f "$TMPDIR"/server-building.pid ] ; then
-        echo "building server already running" >&2
-        return
-      fi
 
-      MAVEN_OPTS=-Dorg.slf4j.simpleLogger.log.org.eclipse.jetty.server.RequestLog=warn mvn -f "server/ldbbc/pom.xml" -D"jetty.port=40200" jetty:run &
+      for ((cnt=0;cnt<$BUILDINGCOUNT;cnt++)); do
 
-      echo $! > "$TMPDIR"/server-building.pid
+        if [ ! -d $MOLTMPDIR/$cnt ] ; then
+          echo "no building data for building $cnt. Exiting." >&2
+          exit 1
+        fi
 
-      sleep 10
+        if [ -f "$TMPDIR"/server-building-"$cnt".pid ] ; then
+          echo "building server $cnt already running" >&2
+          return
+        fi
 
-      for file in $(find $MOLTMPDIR/ -type f) ; do
-        curl -f -X PUT localhost:40200/ldbbc/ -Hcontent-type:text/turtle -T $file
-      done
+        MAVEN_OPTS=-Dorg.slf4j.simpleLogger.log.org.eclipse.jetty.server.RequestLog=warn mvn -f "server/ldbbc/pom.xml" -D"jetty.port=$( expr 40200 + $cnt )" jetty:run &
 
-      curl -f -X PUT localhost:40200/ldbbc/ -Hcontent-type:text/turtle -T $SCRIPTDIR/brick/GroundTruth/building_instances/IBM_B3.ttl
+        echo $! > "$TMPDIR"/server-building-"$cnt".pid
 
-      for file in $(find $SCRIPTDIR/brick/GroundTruth/Brick/ -name 'B*ttl' -type f) ; do
-        curl -f -X PUT localhost:40200/ldbbc/ -Hcontent-type:text/turtle -T $file
-      done
+        sleep 10
 
-      for file in $(find $TMPDIR -type f -name 'IBM_B3-p*ttl') ; do
-        curl -f -X PUT localhost:40200/ldbbc/ -Hcontent-type:text/turtle -T $file
+        for file in $(find $MOLTMPDIR/$cnt -type f) ; do
+          curl -f -X PUT localhost:$( expr 40200 + $cnt )/ldbbc/ -Hcontent-type:text/turtle -T $file
+        done
+
+        curl -f -X PUT localhost:$( expr 40200 + $cnt )/ldbbc/ -Hcontent-type:text/turtle -T $SCRIPTDIR/brick/GroundTruth/building_instances/IBM_B3.ttl
+
+        for file in $(find $SCRIPTDIR/brick/GroundTruth/Brick/ -name 'B*ttl' -type f) ; do
+          curl -f -X PUT localhost:$( expr 40200 + $cnt )/ldbbc/ -Hcontent-type:text/turtle -T $file
+        done
+
+        for file in $(find $TMPDIR/$cnt -type f -name 'IBM_B3-p*ttl') ; do
+          curl -f -X PUT localhost:$( expr 40200 + $cnt )/ldbbc/ -Hcontent-type:text/turtle -T $file
+        done
+
       done
 
       ;;
 
     property)
-      if [ -f "$TMPDIR"/server-property.pid ] ; then
-        echo "property server already running" >&2
-        return
-      fi
 
-      # special treatment for occupancy sensors, as they should (not) sense at random
-      OCCSENS=$(tail -q -n+2                                        `# skip the CSV headers silently` \
-          "$TMPDIR"/IBM_B3-occupancy-sensors.tsv \
-        | awk -F'#' '{ print "-o", $2 }' | xargs echo)
-      LUMSENS=$(tail -q -n+2                                        `# skip the CSV headers silently` \
-          "$TMPDIR"/IBM_B3-luminance-sensors.tsv \
-        | awk -F'#' '{ print "-l", $2 }' | xargs echo)
-      SWITCHES=$(tail -q -n+2                                        `# skip the CSV headers silently` \
-          "$TMPDIR"/IBM_B3-luminance-commands.tsv \
-        | awk -F'#' '{ print "-s", $2 }' | xargs echo)
-      ALARMS=$(tail -q -n+2                                          `# skip the CSV headers silently` \
-          "$TMPDIR"/IBM_B3-luminance-alarms.tsv \
-        | awk -F'#' '{ print "-s", $2 }' | xargs echo)
-      LIGHTS=$(tail -q -n+2                                          `# skip the CSV headers silently` \
-          "$TMPDIR"/IBM_B3-lights.tsv \
-        | awk -F'#' '{ print "-b", $2 }' | xargs echo)
+      for ((cnt=0;cnt<$BUILDINGCOUNT;cnt++)); do
+ 
+        if [ -f "$TMPDIR"/server-property-"$cnt".pid ] ; then
+          echo "property server $cnt already running" >&2
+          return
+        fi
 
-      node server/ld-ssn-properties/index.js $OCCSENS $LUMSENS $SWITCHES $LIGHTS $ALARMS -p 40300 --speedup "$SPEEDUP" & `# startup the server with the fragment identifiers`
+        # special treatment for occupancy sensors, as they should (not) sense at random
+        OCCSENS=$(tail -q -n+2                                         `# skip the CSV headers silently` \
+            "$TMPDIR"/IBM_B3-occupancy-sensors.tsv \
+          | awk -F'#' '{ print "-o", $2 }' | xargs echo)
+        LUMSENS=$(tail -q -n+2                                         `# skip the CSV headers silently` \
+            "$TMPDIR"/IBM_B3-luminance-sensors.tsv \
+          | awk -F'#' '{ print "-l", $2 }' | xargs echo)
+        SWITCHES=$(tail -q -n+2                                        `# skip the CSV headers silently` \
+            "$TMPDIR"/IBM_B3-luminance-commands.tsv \
+          | awk -F'#' '{ print "-s", $2 }' | xargs echo)
+        ALARMS=$(tail -q -n+2                                          `# skip the CSV headers silently` \
+            "$TMPDIR"/IBM_B3-luminance-alarms.tsv \
+          | awk -F'#' '{ print "-s", $2 }' | xargs echo)
+        LIGHTS=$(tail -q -n+2                                          `# skip the CSV headers silently` \
+            "$TMPDIR"/IBM_B3-lights.tsv \
+          | awk -F'#' '{ print "-b", $2 }' | xargs echo)
 
-      echo $! > "$TMPDIR"/server-property.pid
+        node server/ld-ssn-properties/index.js $OCCSENS $LUMSENS $SWITCHES $LIGHTS $ALARMS -p $( expr 40300 + $cnt ) --speedup "$SPEEDUP" & `# startup the server with the fragment identifiers`
+
+        echo $! > "$TMPDIR"/server-property-"$cnt".pid
+
+      done
       ;;
 
     *)
@@ -121,8 +140,8 @@ function stopserver {
 
     all)
       echo "stopping all" >&2
-      stopserver property
       stopserver building
+      stopserver property
       stopserver weather
       stopserver time
       return
@@ -141,21 +160,38 @@ function stopserver {
       ;;
   esac
 
-  if [ -f "$TMPDIR"/server-$1.pid ] ; then
-    $KCMD $(cat "$TMPDIR"/server-$1.pid) && echo "Stopped $1 server" >&2 || echo "Error stopping $1 server"
-    rm "$TMPDIR"/server-$1.pid
-  else
-    echo "No $1 server to stop" >&2
-  fi
+  shopt -s nullglob
+  for file in "$TMPDIR"/server-$1*.pid ; do
+    $KCMD $(cat $file) && echo "Stopped $1 server" >&2 || echo "Error stopping $1 server"
+    rm $file
+  done
 }
 
 function usage {
-  echo "usage: $0 <start|stop> <building|property|all>" >&2
+  echo "usage: $0 [-? -s <speedupfactor> -n <buildingcount>] <start|stop> <building|property|all>" >&2
   exit 1
 }
 
+while getopts "?s:n:" opt; do
+  case "$opt" in
+    s)
+      SPEEDUP="$OPTARG"
+    ;;
+    n)
+      BUILDINGCOUNT="$OPTARG"
+    ;;
+    \?)
+      usage
+    ;;
+  esac
+done
+
+shift $((OPTIND-1))
+
 case $1 in
   start)
+    echo "Number of buildings: $BUILDINGCOUNT" >&2
+    echo "Speedup factor: $SPEEDUP" >&2
     startserver $2
     ;;
 
