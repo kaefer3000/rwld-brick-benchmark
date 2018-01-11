@@ -1,13 +1,15 @@
 #!/usr/bin/awk -f
 
 # Extracts rules to turn off things.
+# The base URI for the URIs on the property server can be overriden on cli using -v base=<URI>
 
 BEGIN {
+  if (base == "") { base="http://localhost:8080/" ; }
   print "@prefix http: <http://www.w3.org/2011/http#> ." ;
   print "@prefix http_m: <http://www.w3.org/2011/http-methods#> ." ;
   print "@prefix rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#> .";
   print "@prefix saref: <https://w3id.org/saref#> .";
-  print "@prefix prop: <http://localhost:8080/> .";
+  print "@prefix prop: <" base "> .";
   FS="[# ]"
 }
 

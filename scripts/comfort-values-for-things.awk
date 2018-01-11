@@ -2,6 +2,7 @@
 
 #
 # Creates comfort values for all URIs supplied.
+# The base URI for the URIs can be overriden on cli using -v base=<URI>
 #
 
 BEGIN {
