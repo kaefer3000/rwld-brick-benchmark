@@ -49,12 +49,12 @@ time:Sunday    a ex:WeekendDay .
 { ?x time:hour "22"^^xsd:integer . } => { ?x a ex:SleepingHourDateTimeDescription . } .
 { ?x time:hour "23"^^xsd:integer . } => { ?x a ex:SleepingHourDateTimeDescription . } .
 
-{ [] http:mthd http_m:GET; http:requestURI <http://localhost:8082/> . }
+{ [] http:mthd http_m:GET; http:requestURI <http://localhost:40102/> . }
 
 
 # Turn off stuff during the week during sleeping time
 {
-  <http://localhost:8082/> dcterms:created ?instant . 
+  <http://localhost:40102/> dcterms:created ?instant . 
   ?instant a ex:SleepingHourDateTimeDescription ;
     time:dayOfWeek ?day .
   ?day a ex:WorkingDay .
@@ -70,7 +70,7 @@ time:Sunday    a ex:WeekendDay .
   [] http:mthd http_m:PUT; http:requestURI ?propcomm ; http:body { ?propcomm  rdf:value "off" . } .
 } .
 {
-  <http://localhost:8082/> dcterms:created ?instant . 
+  <http://localhost:40102/> dcterms:created ?instant . 
   ?instant a ex:SleepingHourDateTimeDescription ;
     time:dayOfWeek ?day .
   ?day a ex:WorkingDay .
@@ -85,7 +85,7 @@ time:Sunday    a ex:WeekendDay .
   [] http:mthd http_m:PUT; http:requestURI ?propcomm ; http:body { ?propcomm  rdf:value "off" . } .
 } .
 {
-  <http://localhost:8082/> dcterms:created ?instant . 
+  <http://localhost:40102/> dcterms:created ?instant . 
   ?instant a ex:SleepingHourDateTimeDescription ;
     time:dayOfWeek ?day .
   ?day a ex:WorkingDay .
@@ -101,7 +101,7 @@ time:Sunday    a ex:WeekendDay .
   [] http:mthd http_m:PUT; http:requestURI ?propcomm ; http:body { ?propcomm  rdf:value "off" . } .
 } .
 {
-  <http://localhost:8082/> dcterms:created ?instant . 
+  <http://localhost:40102/> dcterms:created ?instant . 
   ?instant a ex:SleepingHourDateTimeDescription ;
     time:dayOfWeek ?day .
   ?day a ex:WorkingDay .
@@ -120,7 +120,7 @@ time:Sunday    a ex:WeekendDay .
 
 # Turn off stuff during the weekend
 {
-  <http://localhost:8082/> dcterms:created ?instant . 
+  <http://localhost:40102/> dcterms:created ?instant . 
   ?instant time:dayOfWeek ?day .
   ?day a ex:WeekendDay .
 
@@ -135,7 +135,7 @@ time:Sunday    a ex:WeekendDay .
   [] http:mthd http_m:PUT; http:requestURI ?propcomm ; http:body { ?propcomm  rdf:value "off" . } .
 } .
 {
-  <http://localhost:8082/> dcterms:created ?instant . 
+  <http://localhost:40102/> dcterms:created ?instant . 
   ?instant time:dayOfWeek ?day .
   ?day a ex:WeekendDay .
 
@@ -149,7 +149,7 @@ time:Sunday    a ex:WeekendDay .
   [] http:mthd http_m:PUT; http:requestURI ?propcomm ; http:body { ?propcomm  rdf:value "off" . } .
 } .
 {
-  <http://localhost:8082/> dcterms:created ?instant . 
+  <http://localhost:40102/> dcterms:created ?instant . 
   ?instant time:dayOfWeek ?day .
   ?day a ex:WeekendDay .
 
@@ -165,7 +165,7 @@ time:Sunday    a ex:WeekendDay .
 } .
 
 {
-  <http://localhost:8082/> dcterms:created ?instant . 
+  <http://localhost:40102/> dcterms:created ?instant . 
   ?instant time:dayOfWeek ?day .
   ?day a ex:WeekendDay .
 
@@ -181,7 +181,7 @@ time:Sunday    a ex:WeekendDay .
 
 # Turn on stuff on working days during office hours
 {
-  <http://localhost:8082/> dcterms:created ?instant . 
+  <http://localhost:40102/> dcterms:created ?instant . 
   ?instant a ex:OfficeHourDateTimeDescription ;
     time:dayOfWeek ?day .
   ?day a ex:WorkingDay .
@@ -197,7 +197,7 @@ time:Sunday    a ex:WeekendDay .
   [] http:mthd http_m:PUT; http:requestURI ?propcomm ; http:body { ?propcomm  rdf:value "on" . } .
 } .
 {
-  <http://localhost:8082/> dcterms:created ?instant . 
+  <http://localhost:40102/> dcterms:created ?instant . 
   ?instant a ex:OfficeHourDateTimeDescription ;
     time:dayOfWeek ?day .
   ?day a ex:WorkingDay .
@@ -212,7 +212,7 @@ time:Sunday    a ex:WeekendDay .
   [] http:mthd http_m:PUT; http:requestURI ?propcomm ; http:body { ?propcomm  rdf:value "on" . } .
 } .
 {
-  <http://localhost:8082/> dcterms:created ?instant . 
+  <http://localhost:40102/> dcterms:created ?instant . 
   ?instant a ex:OfficeHourDateTimeDescription ;
     time:dayOfWeek ?day .
   ?day a ex:WorkingDay .
@@ -228,7 +228,7 @@ time:Sunday    a ex:WeekendDay .
   [] http:mthd http_m:PUT; http:requestURI ?propcomm ; http:body { ?propcomm  rdf:value "on" . } .
 } .
 {
-  <http://localhost:8082/> dcterms:created ?instant . 
+  <http://localhost:40102/> dcterms:created ?instant . 
   ?instant a ex:OfficeHourDateTimeDescription ;
     time:dayOfWeek ?day .
   ?day a ex:WorkingDay .

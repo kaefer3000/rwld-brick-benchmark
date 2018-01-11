@@ -13,11 +13,11 @@
 @prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
 @prefix string: <http://www.w3.org/2000/10/swap/string#> .
 
-{ [] http:mthd http_m:GET ; http:requestURI <http://localhost:8082/> . } # Time API
+{ [] http:mthd http_m:GET ; http:requestURI <http://localhost:40102/> . } # Time API
 { [] http:mthd http_m:GET ; http:requestURI <http://localhost:8083/> . } # Weather API
 
 {
-  <http://localhost:8082/> dcterms:created ?currentTime .
+  <http://localhost:40102/> dcterms:created ?currentTime .
   ?x <http://www.example.org/hasSunshineEvent> ?ev .
   ?ev <http://schema.org/startEvent> ?sunrise ;
     <http://schema.org/endEvent> ?sunset .
@@ -27,10 +27,10 @@
 }
 =>
 {
-  <http://localhost:8082/> a ex:DayTime .
+  <http://localhost:40102/> a ex:DayTime .
 } .
 {
-  <http://localhost:8082/> dcterms:created ?currentTime .
+  <http://localhost:40102/> dcterms:created ?currentTime .
   ?x <http://www.example.org/hasSunshineEvent> ?ev .
   ?ev <http://schema.org/startEvent> ?sunrise ;
     <http://schema.org/endEvent> ?sunset .
@@ -39,10 +39,10 @@
 }
 =>
 {
-  <http://localhost:8082/> a ex:NightTime .
+  <http://localhost:40102/> a ex:NightTime .
 } .
 {
-  <http://localhost:8082/> dcterms:created ?currentTime .
+  <http://localhost:40102/> dcterms:created ?currentTime .
   ?x <http://www.example.org/hasSunshineEvent> ?ev .
   ?ev <http://schema.org/startEvent> ?sunrise ;
     <http://schema.org/endEvent> ?sunset .
@@ -51,12 +51,12 @@
 }
 =>
 {
-  <http://localhost:8082/> a ex:NightTime .
+  <http://localhost:40102/> a ex:NightTime .
 } .
 
 # Turn off stuff during night time
 {
-  <http://localhost:8082/> a ex:NightTime .
+  <http://localhost:40102/> a ex:NightTime .
 
   ?command a brick:Luminance_Command ;
     ssn:hasProperty ?propcomm ;
@@ -69,7 +69,7 @@
   [] http:mthd http_m:PUT; http:requestURI ?propcomm ; http:body { ?propcomm  rdf:value "off" . } .
 } .
 {
-  <http://localhost:8082/> a ex:NightTime .
+  <http://localhost:40102/> a ex:NightTime .
 
   ?command a brick:Luminance_Command ;
     ssn:hasProperty ?propcomm ;
@@ -81,7 +81,7 @@
   [] http:mthd http_m:PUT; http:requestURI ?propcomm ; http:body { ?propcomm  rdf:value "off" . } .
 } .
 {
-  <http://localhost:8082/> a ex:NightTime .
+  <http://localhost:40102/> a ex:NightTime .
 
   ?command a brick:Luminance_Command ;
     ssn:hasProperty ?propcomm ;
@@ -94,7 +94,7 @@
   [] http:mthd http_m:PUT; http:requestURI ?propcomm ; http:body { ?propcomm  rdf:value "off" . } .
 } .
 {
-  <http://localhost:8082/> a ex:NightTime .
+  <http://localhost:40102/> a ex:NightTime .
 
   ?command a brick:Luminance_Command ;
     ssn:hasProperty ?propcomm ;
@@ -109,7 +109,7 @@
 
 # Turn on stuff during day time
 {
-  <http://localhost:8082/> a ex:DayTime .
+  <http://localhost:40102/> a ex:DayTime .
 
   ?command a brick:Luminance_Command ;
     ssn:hasProperty ?propcomm ;
@@ -122,7 +122,7 @@
   [] http:mthd http_m:PUT; http:requestURI ?propcomm ; http:body { ?propcomm  rdf:value "on" . } .
 } .
 {
-  <http://localhost:8082/> a ex:DayTime .
+  <http://localhost:40102/> a ex:DayTime .
 
   ?command a brick:Luminance_Command ;
     ssn:hasProperty ?propcomm ;
@@ -134,7 +134,7 @@
   [] http:mthd http_m:PUT; http:requestURI ?propcomm ; http:body { ?propcomm  rdf:value "on" . } .
 } .
 {
-  <http://localhost:8082/> a ex:DayTime .
+  <http://localhost:40102/> a ex:DayTime .
 
   ?command a brick:Luminance_Command ;
     ssn:hasProperty ?propcomm ;
@@ -147,7 +147,7 @@
   [] http:mthd http_m:PUT; http:requestURI ?propcomm ; http:body { ?propcomm  rdf:value "on" . } .
 } .
 {
-  <http://localhost:8082/> a ex:DayTime .
+  <http://localhost:40102/> a ex:DayTime .
 
   ?command a brick:Luminance_Command ;
     ssn:hasProperty ?propcomm ;

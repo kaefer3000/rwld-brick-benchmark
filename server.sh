@@ -34,7 +34,7 @@ function startserver {
         echo "time server already running" >&2
         return
       fi
-      MAVEN_OPTS=-Dorg.slf4j.simpleLogger.log.org.eclipse.jetty.server.RequestLog=warn mvn -f "server/timeservlet/pom.xml" -D"jetty.port=8082" -D"timeservlet.speedupfactor=$SPEEDUP" jetty:run &
+      MAVEN_OPTS=-Dorg.slf4j.simpleLogger.log.org.eclipse.jetty.server.RequestLog=warn mvn -f "server/timeservlet/pom.xml" -D"jetty.port=40102" -D"timeservlet.speedupfactor=$SPEEDUP" jetty:run &
 
       echo $! > "$TMPDIR"/server-time.pid
 
