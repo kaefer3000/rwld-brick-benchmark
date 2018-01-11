@@ -22,7 +22,7 @@ You have to tell git to also fetch the submodules
 ### Evaluation directions
 * Data access:
   * All data in one file on an HTTP server
-  * Deployed as Linked Data: RDF molecules from the materialised reasoning of Brick ontology + IBM B3 building description
+  * Deployed as Linked Data: One-hop network around the IRIs from the materialised reasoning of Brick ontology + IBM B3 building description
 * Work loads:
   * Turn on the lights - baseline - baseline
   * Turn on the lights during working hours (eg. 7 am to 7 pm) - raising energy efficiency - adding conditions
