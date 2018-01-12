@@ -155,11 +155,11 @@ function stopserver {
 
     all)
       echo "stopping all" >&2
-      startserver building
-      startserver property
-      startserver time
-      startserver coin
-      startserver weather
+      stopserver building
+      stopserver property
+      stopserver time
+      stopserver coin
+      stopserver weather
       return
       ;;
 
