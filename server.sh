@@ -184,7 +184,7 @@ function stopserver {
 }
 
 function usage {
-  echo "usage: $0 [-? -s <speedupfactor> -n <buildingcount>] <start|stop> <building|property|all>" >&2
+  echo "usage: $0 [-? -s <speedupfactor> -n <buildingcount>] <start|stop> <building|property|time|coin|weather|all>" >&2
   exit 1
 }
 
