@@ -29,6 +29,7 @@ function startserver {
       startserver building
       startserver property
       startserver time
+      startserver coin
       startserver weather
       return
       ;;
@@ -41,6 +42,18 @@ function startserver {
       MAVEN_OPTS=-Dorg.slf4j.simpleLogger.log.org.eclipse.jetty.server.RequestLog=warn mvn -f "server/timeservlet/pom.xml" -D"jetty.port=40102" -D"timeservlet.speedupfactor=$SPEEDUP" jetty:run &
 
       echo $! > "$TMPDIR"/server-time.pid
+
+      return
+      ;;
+
+    coin)
+      if [ -f "$TMPDIR"/server-coin.pid ] ; then
+        echo "coin server already running" >&2
+        return
+      fi
+      MAVEN_OPTS=-Dorg.slf4j.simpleLogger.log.org.eclipse.jetty.server.RequestLog=warn mvn -f "server/coinflip-servlet/pom.xml" -D"jetty.port=40104" jetty:run &
+
+      echo $! > "$TMPDIR"/server-coin.pid
 
       return
       ;;
@@ -140,14 +153,15 @@ function stopserver {
 
     all)
       echo "stopping all" >&2
-      stopserver building
-      stopserver property
-      stopserver weather
-      stopserver time
+      startserver building
+      startserver property
+      startserver time
+      startserver coin
+      startserver weather
       return
       ;;
 
-    building|time|weather|property)
+    building|time|weather|property|coin)
       KCMD="kill"
       ;;
 

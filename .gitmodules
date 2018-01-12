@@ -10,3 +10,6 @@
 [submodule "server/timeservlet"]
 	path = server/timeservlet
 	url = https://github.com/kaefer3000/timeservlet
+[submodule "server/coinflip-servlet"]
+	path = server/coinflip-servlet
+	url = https://github.com/kaefer3000/coinflip-servlet
