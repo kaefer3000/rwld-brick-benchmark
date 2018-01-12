@@ -15,6 +15,8 @@ SPEEDUP="613200"
 
 BUILDINGCOUNT="1"
 
+HOSTNAME="localhost"
+
 if [ ! -d "$TMPDIR" ] ; then
   echo "initialise first" >&2
   exit 1
@@ -91,17 +93,17 @@ function startserver {
         sleep 10
 
         for file in $(find $MOLTMPDIR/$cnt -type f) ; do
-          curl -f -X PUT localhost:$( expr 40200 + $cnt )/ldbbc/ -Hcontent-type:text/turtle -T $file
+          curl -f -X PUT $HOSTNAME:$( expr 40200 + $cnt )/ldbbc/ -Hcontent-type:text/turtle -T $file
         done
 
-        curl -f -X PUT localhost:$( expr 40200 + $cnt )/ldbbc/ -Hcontent-type:text/turtle -T $SCRIPTDIR/brick/GroundTruth/building_instances/IBM_B3.ttl
+        curl -f -X PUT $HOSTNAME:$( expr 40200 + $cnt )/ldbbc/ -Hcontent-type:text/turtle -T $SCRIPTDIR/brick/GroundTruth/building_instances/IBM_B3.ttl
 
         for file in $(find $SCRIPTDIR/brick/GroundTruth/Brick/ -name 'B*ttl' -type f) ; do
-          curl -f -X PUT localhost:$( expr 40200 + $cnt )/ldbbc/ -Hcontent-type:text/turtle -T $file
+          curl -f -X PUT $HOSTNAME:$( expr 40200 + $cnt )/ldbbc/ -Hcontent-type:text/turtle -T $file
         done
 
         for file in $(find $TMPDIR/$cnt -type f -name 'IBM_B3-p*ttl') ; do
-          curl -f -X PUT localhost:$( expr 40200 + $cnt )/ldbbc/ -Hcontent-type:text/turtle -T $file
+          curl -f -X PUT $HOSTNAME:$( expr 40200 + $cnt )/ldbbc/ -Hcontent-type:text/turtle -T $file
         done
 
       done
@@ -186,13 +188,16 @@ function usage {
   exit 1
 }
 
-while getopts "?s:n:" opt; do
+while getopts "?s:n:h:" opt; do
   case "$opt" in
     s)
       SPEEDUP="$OPTARG"
     ;;
     n)
       BUILDINGCOUNT="$OPTARG"
+    ;;
+    h)
+      HOSTNAME="$OPTARG"
     ;;
     \?)
       usage

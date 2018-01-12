@@ -34,7 +34,7 @@ You have to tell git to also fetch the submodules
 
 ## Usage for workflow-based automation benchmark
 * `./init.sh -n <buildingcount> -h <hostname>` To initialise data
-* `./server.sh -n <buildingcount> -s <speedupfactor> start all` To start all servers
+* `./server.sh -n <buildingcount> -h <hostname> -s <speedupfactor> start all` To start all servers
 
 Supply the number of buildings to be simulated, default: `1`.
 If the client does not run on localhost, supply the hostname, default: `localhost`.
