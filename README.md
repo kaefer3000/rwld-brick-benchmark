@@ -1,5 +1,6 @@
 # rwld-brick-benchmark
-A benchmark for Read-Write Linked Data clients
+A benchmark for Read-Write Linked Data clients in a building automation scenario.
+Simulates a building (IBM B3 of IBM Dublin) [as described](https://github.com/BuildSysUniformMetadata/GroundTruth/blob/2e48662/building_instances/IBM_B3.ttl) using the [Brick ontology](http://brickschema.org/).
 
 ## Prerequisites
 * Java >= 7
