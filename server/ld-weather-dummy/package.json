@@ -4,7 +4,7 @@
   "description": "A server that serves a fake weather report for dublin",
   "main": "index.js",
   "dependencies": {
-    "morgan": "^1.7.0",
+    "morgan": "^1.9.1",
     "express": "^4.14.0",
     "minimist": "^1.2.0"
   },
