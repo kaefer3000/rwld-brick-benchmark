@@ -1,4 +1,9 @@
 #!/bin/bash
+#
+# Download and extract the necessary data, set up servers.
+#
+# Author: Tobias Käfer
+#
 
 # fail the script if a command fails
 set -e
