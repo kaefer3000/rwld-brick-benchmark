@@ -10,7 +10,12 @@ Simulates a building (IBM B3 of IBM Dublin) [as described](https://github.com/Bu
 * AWK
 * node.js
 * Free ports between `40100` and `40399`
-
+* NxParser 3.0.0-SNAPSHOT installed:
+```
+$ git clone https://github.com/nxparser/nxparser
+$ cd nxparser
+$ mvn -Dmaven.test.skip=true install
+```
 ## Obtain
 You have to tell git to also fetch the submodules
 `git clone https://github.com/kaefer3000/rwld-brick-benchmark --recursive`
