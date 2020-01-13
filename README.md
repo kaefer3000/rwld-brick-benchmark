@@ -3,7 +3,7 @@ A benchmark for Read-Write Linked Data clients in a building automation scenario
 Simulates a building (IBM B3 of IBM Dublin) [as described](https://github.com/BuildSysUniformMetadata/GroundTruth/blob/2e48662/building_instances/IBM_B3.ttl) using the [Brick ontology](http://brickschema.org/).
 
 ## Prerequisites
-* Java >= 7
+* Java >= 7. Tested with Java 8.
 * Maven >= Version 3.1
 * WGET
 * CURL
@@ -16,6 +16,8 @@ $ git clone https://github.com/nxparser/nxparser
 $ cd nxparser
 $ mvn -Dmaven.test.skip=true install
 ```
+We had to make a choice between Java 8 and Java 11 support for a dependency, currently we decided for Java 8 as it is still widely supported, but we will switch to Java 11 in the future.
+
 ## Obtain
 You have to tell git to also fetch the submodules
 `git clone https://github.com/kaefer3000/rwld-brick-benchmark --recursive`
