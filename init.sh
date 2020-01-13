@@ -180,6 +180,7 @@ done
 
 # Installing server dependencies
 npm --prefix "server/ld-ssn-properties" install
+npm --prefix "server/ld-weather-dummy" install
 mvn -f "server/ldbbc/pom.xml" -D"jetty.skip=true" jetty:run
 mvn -f "server/timeservlet/pom.xml" -D"jetty.skip=true" jetty:run
 mvn -f "server/coinflip-servlet/pom.xml" -D"jetty.skip=true" jetty:run
