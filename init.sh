@@ -107,13 +107,13 @@ for ((cnt=0;cnt<$BUILDINGCOUNT;cnt++)); do
     mkdir "$TMPDIR"/"$cnt"
   fi
 
-  awk -f "scripts/ssn-hasProperty-for-things.awk" -v base="http://$HOSTNAME:$( expr 40300 + $cnt )/" "$TMPDIR"/IBM_B3-luminance-commands.tsv \
+  awk -f "scripts/sosa-actsOnProperty-for-things.awk" -v base="http://$HOSTNAME:$( expr 40300 + $cnt )/" "$TMPDIR"/IBM_B3-luminance-commands.tsv \
     | rapper -i turtle -o turtle -I"http://buildsys.org/ontologies/examples/IBM_B3#" - > "$TMPDIR"/"$cnt"/"IBM_B3-property-links-for-luminance-commands.ttl"
-  awk -f "scripts/ssn-hasProperty-for-things.awk" -v base="http://$HOSTNAME:$( expr 40300 + $cnt )/" "$TMPDIR"/IBM_B3-luminance-alarms.tsv \
+  awk -f "scripts/sosa-observes-for-things.awk" -v base="http://$HOSTNAME:$( expr 40300 + $cnt )/" "$TMPDIR"/IBM_B3-luminance-alarms.tsv \
     | rapper -i turtle -o turtle -I"http://buildsys.org/ontologies/examples/IBM_B3#" - > "$TMPDIR"/"$cnt"/"IBM_B3-property-links-for-luminance-alarms.ttl"
-  awk -f "scripts/ssn-hasProperty-for-things.awk" -v base="http://$HOSTNAME:$( expr 40300 + $cnt )/" "$TMPDIR"/IBM_B3-occupancy-sensors.tsv \
+  awk -f "scripts/sosa-observes-for-things.awk" -v base="http://$HOSTNAME:$( expr 40300 + $cnt )/" "$TMPDIR"/IBM_B3-occupancy-sensors.tsv \
     | rapper -i turtle -o turtle -I"http://buildsys.org/ontologies/examples/IBM_B3#" - > "$TMPDIR"/"$cnt"/"IBM_B3-property-links-for-occupancy-sensors.ttl"
-  awk -f "scripts/ssn-hasProperty-for-things.awk" -v base="http://$HOSTNAME:$( expr 40300 + $cnt )/" "$TMPDIR"/IBM_B3-luminance-sensors.tsv \
+  awk -f "scripts/sosa-observes-for-things.awk" -v base="http://$HOSTNAME:$( expr 40300 + $cnt )/" "$TMPDIR"/IBM_B3-luminance-sensors.tsv \
     | rapper -i turtle -o turtle -I"http://buildsys.org/ontologies/examples/IBM_B3#" - > "$TMPDIR"/"$cnt"/"IBM_B3-property-links-for-luminance-sensors.ttl"
   awk -f "scripts/comfort-values-for-things.awk" -v base="http://$HOSTNAME:$( expr 40300 + $cnt )/" "$TMPDIR"/IBM_B3-luminance-sensors.tsv \
     | rapper -i turtle -o turtle -I"http://buildsys.org/ontologies/examples/IBM_B3#" - > "$TMPDIR"/"$cnt"/"IBM_B3-personal-comfort-values-for-luminance-sensors.ttl"
