@@ -6,6 +6,7 @@
 @prefix http_m: <http://www.w3.org/2011/http-methods#>.
 @prefix rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#> .
 @prefix saref: <https://w3id.org/saref#> .
+@prefix sosa: <http://www.w3.org/ns/sosa/> .
 @prefix ssn: <http://www.w3.org/ns/ssn/> .
 
 building:fiverooms bframe:hasPart
@@ -62,6 +63,9 @@ building:Room_SOR42_F_20 .
   [] http:mthd http_m:GET; http:requestURI ?thing .
 } .
 
+# Finally, GETs to the properties.
+# Their location of their thigns is specified in two ways.
+# Moreover, they are connected to the their thing in three flavours.
 {
   ?thing bframe:isLocatedIn building:Wing_SOR46 .
   ?thing ssn:hasProperty ?property .
@@ -70,11 +74,44 @@ building:Room_SOR42_F_20 .
 {
   [] http:mthd http_m:GET; http:requestURI ?property .
 } .
-
 {
   building:Wing_SOR46 bframe:hasPart ?space .
   ?thing bframe:isLocatedIn ?space .
   ?thing ssn:hasProperty ?property .
+}
+=>
+{
+  [] http:mthd http_m:GET; http:requestURI ?property .
+} .
+{
+  ?thing bframe:isLocatedIn building:Wing_SOR46 .
+  ?thing sosa:actsOnProperty ?property .
+}
+=>
+{
+  [] http:mthd http_m:GET; http:requestURI ?property .
+} .
+{
+  building:Wing_SOR46 bframe:hasPart ?space .
+  ?thing bframe:isLocatedIn ?space .
+  ?thing sosa:actsOnProperty ?property .
+}
+=>
+{
+  [] http:mthd http_m:GET; http:requestURI ?property .
+} .
+{
+  ?thing bframe:isLocatedIn building:Wing_SOR46 .
+  ?thing sosa:observes ?property .
+}
+=>
+{
+  [] http:mthd http_m:GET; http:requestURI ?property .
+} .
+{
+  building:Wing_SOR46 bframe:hasPart ?space .
+  ?thing bframe:isLocatedIn ?space .
+  ?thing sosa:observes ?property .
 }
 =>
 {
